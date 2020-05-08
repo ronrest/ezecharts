@@ -89,6 +89,57 @@ class Figure{
 
 
 // #############################################################################
+// PLOTS
+// #############################################################################
+function lineplot(settings){
+    /* Creates a lineplot
+     * Args:
+     *     settings: (obj) requires the following items:
+     *               - df dataframe with the data
+     *               - x  (str) name of column to use for x axis
+     *               - y  (str) name of column to use for y axis
+    */
+    //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
+    if ((settings == null) || (settings === undefined)){
+        throw "lineplots requires settings argument"
+    }
+    var df = getOrThrow(settings, "df");
+    var xCol = getOrThrow(settings, "x");
+    var yCol = getOrThrow(settings, "y");
+    var ax = getOrThrow(settings, "ax");
+
+
+    // Extract attributes
+    var xAxis = ax.x;
+    var yAxis = ax.y;
+    var xAxisIndex = ax.xAxisIndex;
+    var yAxisIndex = ax.yAxisIndex;
+    var fig = ax.fig;
+    var series = get_or_create(fig.options, "series", []);
+    // TODO: check if this same df is already in dataset, or
+    //       if it is another dataset
+    var dataset = get_or_create(fig.options, "dataset", {source: df.data});
+
+    // map DF schema types to xAxis types
+    var dfTypeMapper = {categorical: "category", time: "time", continuous: "value", string: "category"}
+
+    // SET X AND Y TYPE SETTINGS if they dont already exist
+    xAxis.type = xAxis.type || get(dfTypeMapper, df.schema[xCol], "value");
+    yAxis.type = yAxis.type || get(dfTypeMapper, df.schema[yCol], "value");
+
+    // ADD THE SERIES
+    fig.options.series.push({
+        type: 'line',
+        xAxisIndex: xAxisIndex,
+        yAxisIndex: yAxisIndex,
+        encode: {x: xCol, y: yCol},
+    });
+    return ax;
+};
+
+
+
+// #############################################################################
 // SUPPORT
 // #############################################################################
 function get_or_create(obj, key, default_val=null){
