@@ -6,7 +6,13 @@ class Axes{
         // settings:  x={scale: true}, y={scale: true}, id=null
         // specify the x, and y axes and the figure it belongs to
         this.fig = fig;
+
+        var gridIndex = get(settings, "gridIndex", 0);
+        this.x = get(settings, "x", {scale: true, name: "x", gridIndex: gridIndex});
+        this.y = get(settings, "y", {scale: true, name: "y", gridIndex: gridIndex});
         var autolink = get(settings, "autolink", true);
+
+
 
         // this.name = this.id === null? this.axIndex: id;
 
