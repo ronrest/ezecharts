@@ -6,8 +6,6 @@ class Axes{
         // settings:  x={scale: true}, y={scale: true}, id=null
         // specify the x, and y axes and the figure it belongs to
         this.fig = fig;
-        this.x = get(settings, "x", {scale: true});
-        this.y = get(settings, "y", {scale: true});
         var autolink = get(settings, "autolink", true);
 
         // this.name = this.id === null? this.axIndex: id;
@@ -57,11 +55,23 @@ class Figure{
     constructor() {
         this.options = {
             title: {},
-            legend: {},
             tooltip: {},
                 // axisPointer: {type: "cross"},
             // },
             toolbox: {},
+            legend: {
+                // data: ['a', 'b'],
+                left: "right",
+                top: "center",
+                // bottom: 20,
+                orient: "vertical",
+                // align: "right",
+                // padding: 5
+                // itemGap: 0, // Gap between each legend item
+                // itemHeight: 5, // height of legend item icon
+                // itemWidth: 10, // Width of legend item icon
+                // formatter: function(name){return name.toUpperCase()} // format legend item text
+            },
             dataZoom: [],
             dataset: {},
             grid: null,
@@ -132,7 +142,8 @@ function lineplot(settings){
         type: 'line',
         xAxisIndex: xAxisIndex,
         yAxisIndex: yAxisIndex,
-        encode: {x: xCol, y: yCol},
+        encode: {x: xCol, y: yCol, seriesName: yCol},
+
     });
     return ax;
 };
