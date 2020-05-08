@@ -54,6 +54,22 @@ function getDFcolumn(df, col, include_header=true){
     }
 };
 
+function getUniqueValsInColumn(df, col, numerical=false){
+    // gets unique values in column, and tries to sort them in order
+    // set numerical=true to sort them properly as numbers
+    // if the values in column are numerical
+    var x = getDFcolumn(df=df, col=col, include_header=false);
+    x = Array.from(new Set(x));
+
+    if (numerical){
+        x.sort(function(a, b){return a - b});
+    }else{
+        x.sort();
+    };
+    return x
+};
+
+
 class DF{
     // Initialized in the constructor func
     constructor(data, schema) {
