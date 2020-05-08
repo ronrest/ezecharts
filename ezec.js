@@ -1,4 +1,58 @@
 // #############################################################################
+// CHARTING SUPPORT
+// #############################################################################
+class Axes{
+    constructor(fig, settings={}){
+        // settings:  x={scale: true}, y={scale: true}, id=null
+        // specify the x, and y axes and the figure it belongs to
+        this.fig = fig;
+        this.x = get(settings, "x", {scale: true});
+        this.y = get(settings, "y", {scale: true});
+        var autolink = get(settings, "autolink", true);
+
+        // this.name = this.id === null? this.axIndex: id;
+
+        if (autolink === true){
+            this.autolink();
+        }
+    }
+
+    autolink(){
+        // link the axes to all the figure section settings automatically
+        this.axIndex = this.fig.axes.length;
+        this.xAxisIndex = this.fig.options.xAxis.length;
+        this.yAxisIndex = this.fig.options.yAxis.length;
+
+        this.fig.axes.push(this);
+        this.fig.options.xAxis.push(this.x)
+        this.fig.options.yAxis.push(this.y)
+    }
+
+    sharex(){
+        // Returns a new Axes object that shares the same x axis
+        // as this Axes object
+        // TODO: need to modify the figure.options.yAxis and fig.axes
+        // return new Axes(this.fig, this.x, {});
+        // throw "NotImplementedError: sharex() not implemented properly yet";
+        var ax = new Axes(this.fig, {autolink: false, x: this.x})
+        ax.axIndex = this.fig.axes.length;
+        ax.xAxisIndex = this.xAxisIndex;
+        ax.yAxisIndex = this.fig.options.yAxis.length;
+
+        ax.fig.axes.push(this);
+        ax.fig.options.yAxis.push(this.y)
+        return ax;
+    }
+    sharey(){
+        // Returns a new Axes object that shares the same y axis
+        // as this Axes object
+        // TODO: need to modify the figure.options.xAxis and fig.axes
+        // return new Axes(this.fig, {}, this.y);
+        throw "NotImplementedError: sharey() not implemented properly yet";
+    }
+}
+
+// #############################################################################
 // SUPPORT
 // #############################################################################
 function get_or_create(obj, key, default_val=null){
