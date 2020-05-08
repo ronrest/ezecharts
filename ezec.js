@@ -60,11 +60,16 @@ class Figure{
     // FIgure object to store settings for figure similar to matplotlib
     constructor() {
         this.options = {
-            title: {},
             tooltip: {},
                 // axisPointer: {type: "cross"},
             // },
             toolbox: {},
+            title: {
+                text: null,
+                subtext: null,
+                left: 'center',
+                align: 'right'
+            },
             legend: {
                 // data: ['a', 'b'],
                 left: "right",
@@ -89,6 +94,11 @@ class Figure{
         this.axes = [];
         new Axes(this);
 
+    }
+
+    setTitle(title, subtitle=null){
+        this.options.title.text = title;
+        this.options.title.subtext = subtitle;
     }
 
     setData(df){
