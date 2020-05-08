@@ -52,6 +52,42 @@ class Axes{
     }
 }
 
+class Figure{
+    // FIgure object to store settings for figure similar to matplotlib
+    constructor() {
+        this.options = {
+            title: {},
+            legend: {},
+            tooltip: {},
+                // axisPointer: {type: "cross"},
+            // },
+            toolbox: {},
+            dataZoom: [],
+            dataset: {},
+            grid: null,
+            xAxis: [],
+            yAxis: [],
+            series: [],
+        };
+
+        this.axes = [];
+        new Axes(this);
+
+    }
+
+    setData(df){
+        this.options.dataset.source = df.data;
+        this.schema = df.schema;
+        // TODO: add a schema to the options.dimensions section like this
+        // dimensions: [{name: "date", type: "time"},
+        // {name: "cases"},
+        // {name:"deaths"},
+        // {name:"recovered"}],
+    }
+}
+
+
+
 // #############################################################################
 // SUPPORT
 // #############################################################################
