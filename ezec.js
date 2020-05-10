@@ -60,10 +60,6 @@ class Figure{
     // FIgure object to store settings for figure similar to matplotlib
     constructor() {
         this.options = {
-            tooltip: {},
-                // axisPointer: {type: "cross"},
-            // },
-            toolbox: {},
             title: {
                 text: null,
                 subtext: null,
@@ -82,6 +78,10 @@ class Figure{
                 // itemHeight: 5, // height of legend item icon
                 // itemWidth: 10, // Width of legend item icon
                 // formatter: function(name){return name.toUpperCase()} // format legend item text
+            },
+
+            tooltip: {
+                axisPointer: {type: "cross"},
             },
             dataZoom: [],
             dataset: {},
