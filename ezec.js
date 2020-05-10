@@ -134,6 +134,15 @@ class Figure{
         // axisPointerLink.push({yAxisIndex: yAxisPointerLinkIndices[i]});
         throw "NotImplementedError: linkAxisPointers() not implemented yet";
     }
+
+    plot(container_id){
+        /* Given an id name of an HTML DIV tag element, it renders the plot
+           specified by this figure inside of there.
+        */
+        var chart = echarts.init(document.getElementById(container_id));
+        chart.setOption(this.options);
+        return chart;
+    }
 }
 
 
