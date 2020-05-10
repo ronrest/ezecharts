@@ -83,6 +83,23 @@ class Figure{
             tooltip: {
                 axisPointer: {type: "cross"},
             },
+            toolbox: {
+               left: 'right',
+               feature: {
+                   dataZoom: {
+                       // yAxisIndex: 'none' // to prevent zooming along y axis
+                   },
+                   restore: {},
+                   saveAsImage: {}
+               }
+            },
+            brush: {
+                xAxisIndex: [],
+                yAxisIndex: [],
+                // brushLink: 'all';  // link up all cells
+                // inBrush: {opacity: 1},
+                // outOfBrush: {colorAlpha: 0.1},
+            },
             dataZoom: [],
             dataset: {},
             grid: null,
@@ -99,6 +116,7 @@ class Figure{
     setTitle(title, subtitle=null){
         this.options.title.text = title;
         this.options.title.subtext = subtitle;
+
     }
 
     setData(df){
