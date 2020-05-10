@@ -129,6 +129,11 @@ class Figure{
         // {name:"deaths"},
         // {name:"recovered"}],
     }
+
+    linkAxisPointers(){
+        // axisPointerLink.push({yAxisIndex: yAxisPointerLinkIndices[i]});
+        throw "NotImplementedError: linkAxisPointers() not implemented yet";
+    }
 }
 
 
