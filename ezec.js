@@ -60,6 +60,7 @@ class Figure{
     // FIgure object to store settings for figure similar to matplotlib
     constructor() {
         this.options = {
+            animation: false,
             title: {
                 text: null,
                 subtext: null,
