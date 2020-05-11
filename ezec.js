@@ -8,9 +8,12 @@ class Axes{
         this.fig = fig;
 
         var gridIndex = get(settings, "gridIndex", 0);
-        this.x = get(settings, "x", {scale: true, name: "x", gridIndex: gridIndex});
-        this.y = get(settings, "y", {scale: true, name: "y", gridIndex: gridIndex});
+        this.x = get(settings, "x", {scale: true, name: "", gridIndex: gridIndex});
+        this.y = get(settings, "y", {scale: true, name: "", gridIndex: gridIndex});
         var autolink = get(settings, "autolink", true);
+
+        this.x.name = get(settings, "xLabel", "");
+        this.y.name = get(settings, "yLabel", "");
 
 
 
