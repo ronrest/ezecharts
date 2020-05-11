@@ -20,6 +20,22 @@ linkAxisPointers(axIndices, kind="both")
     kind:       (str) "x", "y", or "both"
                 link up just a single axis, or both
 
+
+
+
+fig.addDataSlider(side, settings)
+    Add a slider that allows you to zoom in to a portion of the data along the
+    x or y axis.
+    By defualt, apply an x axis slider that is synced to all cells
+
+    side:       (str) "x", "y", "both". which axis to use a slider for.
+    settings:   (obj)
+        axes:        (array) list of axes indices which the slider will control
+        showSlider:  (bool) show the slider widget? (default=true)
+        xSliderPositionX: x position of x slider from left side
+        xSliderPositionY: y position of x slider from bottom side
+        ySliderPositionX: x position of y slider from left side
+        ySliderPositionY: y position of y slider from bottom side
 ```
 
 
