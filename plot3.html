@@ -39,23 +39,27 @@
 
             var fig = new Figure({grid:[3,2], gridCellGap:[1,5]});
             fig.setData(mydf);
-            fig.setTitle("Example of Synced Axis Pointer", "cells 0,1,2 are linked along x axis, and cells 0,2,5 linked along y");
+            fig.setTitle("Example of Synced Axis Pointer", "cells 0,2,4 are linked along x axis, and cells 3,4,5 linked along y");
 
-            var ax1 = fig.axes[0]
-            var ax2 = fig.axes[1]
-            var ax3 = ax2.sharex();
-            fig.linkAxisPointers([0,2,1], "x");
-            fig.linkAxisPointers([0,2,5], "y");
+            var ax1 = fig.axes[1]
+            var ax1b = ax1.sharex();
+
+            fig.linkAxisPointers([0,2,4], "x");
+            fig.linkAxisPointers([3,4,5], "y");
             // fig.linkAxisPointers([0,2,1], "both");
+            fig.addDataSlider("x", {axes: [0,2,4]});
+            fig.addDataSlider("x", {axes: [1,3,5], xSLiderPositionX: "50%", xSLiderPositionY: "50%"});
+            fig.addDataSlider("y", {axes: [0,1,6], ySLiderPositionX: "0%", ySLiderPositionY: "0%"});
 
-            lineplot({df: mydf, x: "date", y: "cases", ax: ax1});
-            lineplot({df: mydf, x: "date", y: "deaths", ax: ax2});
-            lineplot({df: mydf, x: "date", y: "recovered", ax: ax3});
+            lineplot({df: mydf, x: "date", y: "cases", ax: fig.axes[0]});
+            lineplot({df: mydf, x: "date", y: "deaths", ax: fig.axes[2]});
+            lineplot({df: mydf, x: "date", y: "recovered", ax: fig.axes[4]});
 
-            lineplot({df: mydf, x: "date", y: "recovered", ax: fig.axes[2]});
-            lineplot({df: mydf, x: "recovered", y: "deaths", ax: fig.axes[3]});
-            lineplot({df: mydf, x: "deaths", y: "cases", ax: fig.axes[4]});
-            lineplot({df: mydf, x: "recovered", y: "cases", ax: fig.axes[5]});
+            lineplot({df: mydf, x: "cases", y: "deaths", ax: ax1});
+            lineplot({df: mydf, x: "cases", y: "recovered", ax: ax1b});
+
+            lineplot({df: mydf, x: "deaths", y: "cases", ax: fig.axes[3]});
+            lineplot({df: mydf, x: "deaths", y: "recovered", ax: fig.axes[5]});
 
 
             // console.log(p2);

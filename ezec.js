@@ -8,7 +8,7 @@ class Axes{
         this.fig = fig;
 
         this.gridIndex = get(settings, "gridIndex", 0);
-        this.x = get(settings, "x", {scale: true, name: ""});
+        this.x = get(settings, "x", {scale: true, name: ""}); //min:"2020-03-01"
         this.y = get(settings, "y", {scale: true, name: ""});
         var autolink = get(settings, "autolink", true);
 
@@ -124,13 +124,21 @@ class Figure{
                 axisPointer: {type: "cross"},
             },
             toolbox: {
-               left: 'right',
+               right: "0%",
+               top: "0%",
+               height: "auto",
                feature: {
                    dataZoom: {
-                       // yAxisIndex: 'none' // to prevent zooming along y axis
+                       // yAxisIndex: false, // to prevent zooming along y axis
+                   },
+                   brush: {
+                       type: ['lineX', "rect","polygon", "keep", 'clear']
                    },
                    restore: {},
-                   saveAsImage: {}
+                   saveAsImage: {},
+                   tooltip: {},
+                   // dataView: {},// to view and edit data
+                   // magicType: {type: ['line', 'bar', 'stack', 'tiled']}, // for switching between diferent representations
                }
             },
             brush: {
@@ -210,6 +218,42 @@ class Figure{
             axisPointerLink.push({yAxisIndex: links});
         }
 
+    }
+
+    addDataSlider(side="x", settings={}){
+        // By defualt, apply to x axis, and all cells
+        // side:        "x", "y", or "both"
+        // axes:        (array) list of axes indices which the slider will control
+        // showSlider:  (bool) show the slider widget? (default=true)
+        // xSliderPositionX: x position of x slider from left side
+        // xSliderPositionY: y position of x slider from bottom side
+        // ySliderPositionX: x position of y slider from left side
+        // ySliderPositionY: y position of y slider from bottom side
+        var axes = get(settings, "axes", [...Array(this.axes.length).keys()]);
+        var showSlider = get(settings, "showSlider", true);
+        var xSliderPositionY = get(settings, "xSliderPositionY", "0%");
+        var xSliderPositionX = get(settings, "xSliderPositionX", null);
+        var ySliderPositionX = get(settings, "ysliderPositionX", "0%");
+        var ySliderPositionY = get(settings, "ysliderPositionY", null);
+        var dataZoom = get_or_create(this.options, "dataZoom", []);
+        var fig = this;
+
+        if ((side === "x") || (side === "both")){
+            var axisIndices = [];
+            axes.forEach(function (item){
+                axisIndices.push(fig.axes[item].xAxisIndex)
+            });
+            dataZoom.push({type: 'inside', xAxisIndex: axisIndices})
+            dataZoom.push({type: 'slider', show: showSlider, xAxisIndex: axisIndices, bottom: xSliderPositionY, left: xSliderPositionX})
+        };
+        if ((side === "y") || (side === "both")){
+            var axisIndices = [];
+            axes.forEach(function (item){
+                axisIndices.push(fig.axes[item].yAxisIndex)
+            });
+            dataZoom.push({type: 'inside', yAxisIndex: axisIndices})
+            dataZoom.push({type: 'slider', show: showSlider, yAxisIndex: axisIndices, bottom: ySliderPositionY, left: ySliderPositionX})
+        }
     }
 
     plot(container_id){

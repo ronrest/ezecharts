@@ -41,6 +41,10 @@
             fig.setData(mydf);
             fig.setTitle("THis is my title", "and my subtitle");
 
+            // Add slider for X
+            fig.addDataSlider("x");
+            fig.addDataSlider("y");
+
             var ax = fig.axes[0]
             // var ax2 = ax.sharex();
             var p1 = lineplot({df: mydf, x: "date", y: "cases", ax: ax});
