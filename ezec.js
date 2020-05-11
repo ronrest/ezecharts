@@ -194,7 +194,7 @@ class Figure{
         var axisPointer = get_or_create(this.options, "axisPointer", {});
         var axisPointerLink = get_or_create(axisPointer, "link", []);
         var axes = this.axes;
-        
+
         if ((kind === "both") || (kind === "x")){
             var links = [];
             axIndices.forEach(function (item) {
