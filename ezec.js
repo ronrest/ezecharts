@@ -58,7 +58,26 @@ class Axes{
 
 class Figure{
     // FIgure object to store settings for figure similar to matplotlib
-    constructor() {
+    constructor(settings={}) {
+        // GRID SETTINGS
+        var gridDims = get(settings, "grid", [1,1]);
+        var nrows = gridDims[0];
+        var ncols = gridDims[1];
+
+        var gridCellGap = get(settings, "gridCellGap", [1,5]);
+        var xGridCellGap = gridCellGap[0];
+        var yGridCellGap = gridCellGap[1];
+        // var yGridCellGap = 1;
+        var figMargins = get(settings, "figMargins", {});
+        var FIG_LEFT_MARGIN = get(figMargins, "left", 5);
+        var FIG_RIGHT_MARGIN = get(figMargins, "right", 2);
+        var FIG_TOP_MARGIN = get(figMargins, "top", 12);
+        var FIG_BOTTOM_MARGIN = get(figMargins, "bottom", 7);
+
+        var CELL_WIDTH = (100 - FIG_LEFT_MARGIN - FIG_RIGHT_MARGIN - xGridCellGap) / ncols - xGridCellGap;
+        var CELL_HEIGHT = (100 - FIG_TOP_MARGIN - FIG_BOTTOM_MARGIN - yGridCellGap) / nrows - yGridCellGap;
+
+
         this.options = {
             animation: false,
             title: {
@@ -103,14 +122,27 @@ class Figure{
             },
             dataZoom: [],
             dataset: {},
-            grid: null,
+            grid: [],
             xAxis: [],
             yAxis: [],
             series: [],
         };
 
         this.axes = [];
-        new Axes(this);
+        var cell_count = 0;
+        var grid = this.options.grid;
+        for (var irow = 0; irow < nrows;  irow++){
+            for (var icol = 0; icol < ncols;  icol++){
+                cell_count++;
+                grid.push({
+                    top: FIG_TOP_MARGIN + irow * (CELL_HEIGHT + yGridCellGap) + '%',
+                    left: FIG_LEFT_MARGIN + icol * (CELL_WIDTH + xGridCellGap) + '%',
+                    width: CELL_WIDTH + '%',
+                    height: CELL_HEIGHT + '%'
+                });
+                new Axes(this, {gridIndex:cell_count-1});
+            };
+        };
 
     }
 
