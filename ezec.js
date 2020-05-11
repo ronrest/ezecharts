@@ -7,10 +7,14 @@ class Axes{
         // specify the x, and y axes and the figure it belongs to
         this.fig = fig;
 
-        var gridIndex = get(settings, "gridIndex", 0);
-        this.x = get(settings, "x", {scale: true, name: "", gridIndex: gridIndex});
-        this.y = get(settings, "y", {scale: true, name: "", gridIndex: gridIndex});
+        this.gridIndex = get(settings, "gridIndex", 0);
+        this.x = get(settings, "x", {scale: true, name: ""});
+        this.y = get(settings, "y", {scale: true, name: ""});
         var autolink = get(settings, "autolink", true);
+
+        // assign gridIndex
+        this.x.gridIndex = this.gridIndex;
+        this.y.gridIndex = this.gridIndex;
 
         this.x.name = get(settings, "xLabel", "");
         this.y.name = get(settings, "yLabel", "");
@@ -54,13 +58,13 @@ class Axes{
         // TODO: need to modify the figure.options.yAxis and fig.axes
         // return new Axes(this.fig, this.x, {});
         // throw "NotImplementedError: sharex() not implemented properly yet";
-        var ax = new Axes(this.fig, {autolink: false, x: this.x})
+        var ax = new Axes(this.fig, {autolink: false, x: this.x, gridIndex:this.gridIndex})
         ax.axIndex = this.fig.axes.length;
         ax.xAxisIndex = this.xAxisIndex;
         ax.yAxisIndex = this.fig.options.yAxis.length;
 
-        ax.fig.axes.push(this);
-        ax.fig.options.yAxis.push(this.y)
+        ax.fig.axes.push(ax);
+        ax.fig.options.yAxis.push(ax.y);
         return ax;
     }
     sharey(){
