@@ -193,20 +193,23 @@ class Figure{
         */
         var axisPointer = get_or_create(this.options, "axisPointer", {});
         var axisPointerLink = get_or_create(axisPointer, "link", []);
-
-        var links = [];
         var axes = this.axes;
-        axIndices.forEach(function (item) {
-            console.log("retreiving xAxisIndex of " + item);
-            if ((kind === "both") || (kind === "x")){
+        
+        if ((kind === "both") || (kind === "x")){
+            var links = [];
+            axIndices.forEach(function (item) {
                 links.push(axes[item].xAxisIndex);
-            };
-            if ((kind === "both") || (kind === "y")){
+            });
+            axisPointerLink.push({xAxisIndex: links});
+        }
+        if ((kind === "both") || (kind === "y")){
+            var links = [];
+            axIndices.forEach(function (item) {
                 links.push(axes[item].yAxisIndex);
-            }
+            });
+            axisPointerLink.push({yAxisIndex: links});
+        }
 
-        });
-        axisPointerLink.push({xAxisIndex: links});
     }
 
     plot(container_id){
