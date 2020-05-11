@@ -9,9 +9,18 @@
 grid:           [nrows, ncols] (default=[1,5])
 gridCellGap:    [xgap, ygap]
 figMargins:     {left: 5, right: 2, top: 12, bottom: 7}
-
 ```
 
+
+```python
+# METHODS
+linkAxisPointers(axIndices, kind="both")
+
+    axIndices:  (list of ints) indices of axes you want to link up
+    kind:       (str) "x", "y", or "both"
+                link up just a single axis, or both
+
+```
 
 
 
