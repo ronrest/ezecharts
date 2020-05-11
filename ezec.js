@@ -15,6 +15,19 @@ class Axes{
         this.x.name = get(settings, "xLabel", "");
         this.y.name = get(settings, "yLabel", "");
 
+        var xAxisTick = get_or_create(this.x, "axisTick", {});
+        var xAxisLabel = get_or_create(this.x, "axisLabel", {});
+        xAxisTick.show = true;
+        xAxisTick.inside = true;
+        xAxisLabel.show = true;
+        xAxisLabel.inside = false;
+
+        var yAxisTick = get_or_create(this.y, "axisTick", {});
+        var yAxisLabel = get_or_create(this.y, "axisLabel", {});
+        yAxisTick.show = true;
+        yAxisTick.inside = true;
+        yAxisLabel.show = true;
+        yAxisLabel.inside = true;
 
 
         // this.name = this.id === null? this.axIndex: id;
