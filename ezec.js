@@ -148,6 +148,10 @@ class Figure{
             series: [],
         };
 
+
+        var tooltip = get_or_create(this.options, "tooltip", {});
+        get_or_create(tooltip, "trigger", 'item');
+
         this.axes = [];
         var cell_count = 0;
         var grid = this.options.grid;
@@ -182,9 +186,27 @@ class Figure{
         // {name:"recovered"}],
     }
 
-    linkAxisPointers(){
-        // axisPointerLink.push({yAxisIndex: yAxisPointerLinkIndices[i]});
-        throw "NotImplementedError: linkAxisPointers() not implemented yet";
+    linkAxisPointers(axIndices, kind="both"){
+        /* Link/Sync the axis pointer (eg crosshairs) accross several
+           axes cells, by passing a list of axes indices you want to link
+           together, and if you want to link "x", "y", or "both" axis.
+        */
+        var axisPointer = get_or_create(this.options, "axisPointer", {});
+        var axisPointerLink = get_or_create(axisPointer, "link", []);
+
+        var links = [];
+        var axes = this.axes;
+        axIndices.forEach(function (item) {
+            console.log("retreiving xAxisIndex of " + item);
+            if ((kind === "both") || (kind === "x")){
+                links.push(axes[item].xAxisIndex);
+            };
+            if ((kind === "both") || (kind === "y")){
+                links.push(axes[item].yAxisIndex);
+            }
+
+        });
+        axisPointerLink.push({xAxisIndex: links});
     }
 
     plot(container_id){
@@ -244,7 +266,6 @@ function lineplot(settings){
         xAxisIndex: xAxisIndex,
         yAxisIndex: yAxisIndex,
         encode: {x: xCol, y: yCol, seriesName: yCol},
-
     });
     return ax;
 };
