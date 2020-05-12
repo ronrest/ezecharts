@@ -97,6 +97,8 @@ class Figure{
         var CELL_WIDTH = (100 - FIG_LEFT_MARGIN - FIG_RIGHT_MARGIN - xGridCellGap) / ncols - xGridCellGap;
         var CELL_HEIGHT = (100 - FIG_TOP_MARGIN - FIG_BOTTOM_MARGIN - yGridCellGap) / nrows - yGridCellGap;
 
+        this.syncX = null;
+        this.syncY = null;
 
         this.options = {
             animation: false,
@@ -186,6 +188,7 @@ class Figure{
     }
 
     setData(df){
+        this.df = df;
         this.options.dataset.source = df.data;
         this.schema = df.schema;
         // TODO: add a schema to the options.dimensions section like this
@@ -218,7 +221,6 @@ class Figure{
             });
             axisPointerLink.push({yAxisIndex: links});
         }
-
     }
 
     addDataSlider(side="x", settings={}){
@@ -257,10 +259,76 @@ class Figure{
         }
     }
 
+    syncXrange(indices){
+        // Creates a flag that the x Axes of the indices provided should be
+        // synced up
+        // TODO: convert axes indices to x axis indices
+        this.syncX = indices;
+    }
+    syncYrange(indices){
+        // Creates a flag that the x Axes of the indices provided should be
+        // synced up
+        // TODO: convert axes indices to x axis indices
+        this.syncY = indices;
+    }
+
+    _syncRange(direction){
+        // Actually sync up the min and max x values for the axes in this.syncX
+        // check each series
+        var fig = this;
+
+        var syncedAxes = fig["sync"+direction.toUpperCase()];
+        var synced_cols = new Set();
+
+        // if the series is assigned to x axis of interest, then get the column it uses
+        // store each column in a set.
+        this.options.series.forEach(function(series_item){
+            if (syncedAxes.includes(series_item.xAxisIndex)){
+                synced_cols.add(series_item.encode[direction])
+            };
+        })
+        // find the min of mins. and max of maxes
+        var minVal = null;
+        var maxVal = null;
+        for (let colname of synced_cols){
+            // for each column, find the min value,, and max
+            var curMinVal = this.df.min(colname);
+            var curMaxVal = this.df.max(colname);
+            if ((minVal === null) || (curMinVal < minVal)){
+                minVal = curMinVal;
+            }
+            if ((maxVal === null) || (curMaxVal > maxVal)){
+                maxVal = curMaxVal;
+            }
+        };
+        console.log("MIN    " + minVal);
+        console.log("MAX    " + maxVal);
+
+        // Set the xAxis.min property for each axis to be linked
+        // xAxis.min
+        syncedAxes.forEach(function(axesIndex){
+            fig.axes[axesIndex][direction].min = minVal;
+            fig.axes[axesIndex][direction].max = maxVal;
+        })
+    }
+
     plot(container_id){
         /* Given an id name of an HTML DIV tag element, it renders the plot
            specified by this figure inside of there.
         */
+        var fig = this;
+
+        // CHECK FOR SYNCING
+        if (this.syncX !== null){
+            fig._syncRange("x");
+        }
+        if (this.syncY !== null){
+            fig._syncRange("y");
+        }
+
+
+
+        // ACTUALLY PLOT
         var chart = echarts.init(document.getElementById(container_id));
         chart.setOption(this.options);
         return chart;
