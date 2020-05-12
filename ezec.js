@@ -298,11 +298,9 @@ class Figure{
     _configureSyncedRange(direction){
         // Actually sync up the min and max x values for the axes in this.syncX
         // check each series
-        console.log("RECEIVED DIRECTION: " + direction);
         var fig = this;
 
         fig.syncedAxisRanges[direction].forEach(function(syncedAxes){
-            console.log("syncedAxes is: ", syncedAxes);
             // var syncedAxes = fig.syncedAxisRanges[direction][0];
 
             // var syncedAxes = fig["sync"+direction.toUpperCase()][0];
