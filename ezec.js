@@ -129,10 +129,11 @@ class Figure{
                height: "auto",
                feature: {
                    dataZoom: {
+                       // filterMode: "filter",
                        // yAxisIndex: false, // to prevent zooming along y axis
                    },
                    brush: {
-                       type: ['lineX', "rect","polygon", "keep", 'clear']
+                       type: ['lineX', 'lineY', "rect","polygon", "keep", 'clear']
                    },
                    restore: {},
                    saveAsImage: {},
