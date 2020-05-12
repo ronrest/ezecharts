@@ -258,29 +258,44 @@ class Figure{
         }
     }
 
+
     syncXrange(indices){
-        // Creates a flag that the x Axes of the indices provided should be
-        // synced up
-        // TODO: convert axes indices to x axis indices
-        this.syncedAxisRanges["x"].push(indices);
+        /* Create flag to Sync up range of values for Axes indices along x axis */
+        this._createSyncRangeFlags("x", indices);
     }
+
     syncYrange(indices){
-        // Creates a flag that the x Axes of the indices provided should be
-        // synced up
-        // TODO: convert axes indices to x axis indices
-        this.syncedAxisRanges["y"].push(indices);
+        /* Create flag to Sync up range of values for Axes indices along y axis */
+        this._createSyncRangeFlags("y", indices);
     }
 
+    _createSyncRangeFlags(side, indices){
+        /* Create flag to Sync up range of values for Axes indices along desired
+         * axis side (x, or y)
+         *
+         * Args:
+         *      side:       (str) "x" or "y"
+         *      indices:    (list of ints) indices of the axes objects you want
+         *                  synchronize.
+         */
+        var fig = this;
+        var axisIndices = [];
+        indices.forEach(function(idx){
+            let axisIndexAttribute = side + "AxisIndex"
+            axisIndices.push(fig.axes[idx][axisIndexAttribute]);
+        })
+        this.syncedAxisRanges[side].push(axisIndices);
+    }
 
-    _syncRanges(){
+    _configureSyncedRanges(){
         var directions = ["x","y"];
         var fig = this;
         directions.forEach(function(direction){
-            fig._syncRange(direction);
+            fig._configureSyncedRange(direction);
         })
     }
 
-    _syncRange(direction){
+    _configureSyncedRange(direction){
         // Actually sync up the min and max x values for the axes in this.syncX
         // check each series
         console.log("RECEIVED DIRECTION: " + direction);
@@ -334,7 +349,7 @@ class Figure{
         var fig = this;
 
         // SYNCING OF AXIS RANGES IF NEEDED
-        fig._syncRanges();
+        fig._configureSyncedRanges();
 
         // ACTUALLY PLOT
         var chart = echarts.init(document.getElementById(container_id));
