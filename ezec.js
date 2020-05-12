@@ -411,6 +411,18 @@ function lineplot(settings){
     */
     genericXYplot("line", settings)
 };
+
+function scatterplot(settings){
+    /* Creates a scatterplot
+     * Args:
+     *     settings: (obj) requires the following items:
+     *               - ax: Axes object to put the plot into.
+     *               - x  (str) name of column to use for x axis
+     *               - y  (str) name of column to use for y axis
+    */
+    genericXYplot("scatter", settings)
+};
+
 };
 
 
