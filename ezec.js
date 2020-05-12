@@ -365,20 +365,13 @@ class Figure{
 // #############################################################################
 // PLOTS
 // #############################################################################
-function lineplot(settings){
-    /* Creates a lineplot
-     * Args:
-     *     settings: (obj) requires the following items:
-     *               - df dataframe with the data
-     *               - ax: Axes object to put the plot into.
-     *               - x  (str) name of column to use for x axis
-     *               - y  (str) name of column to use for y axis
-    */
+function genericXYplot(kind, settings){
     //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
     if ((settings == null) || (settings === undefined)){
         throw "lineplots requires settings argument"
     }
     // var df = getOrThrow(settings, "df");
+    // var kind = get(settings, "kind");
     var xCol = getOrThrow(settings, "x");
     var yCol = getOrThrow(settings, "y");
     var ax = getOrThrow(settings, "ax");
@@ -401,12 +394,23 @@ function lineplot(settings){
 
     // ADD THE SERIES
     fig.options.series.push({
-        type: 'line',
+        type: kind,
         xAxisIndex: xAxisIndex,
         yAxisIndex: yAxisIndex,
         encode: {x: xCol, y: yCol, seriesName: yCol},
     });
-    return ax;
+}
+
+function lineplot(settings){
+    /* Creates a lineplot
+     * Args:
+     *     settings: (obj) requires the following items:
+     *               - ax: Axes object to put the plot into.
+     *               - x  (str) name of column to use for x axis
+     *               - y  (str) name of column to use for y axis
+    */
+    genericXYplot("line", settings)
+};
 };
 
 
