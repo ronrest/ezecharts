@@ -301,8 +301,6 @@ class Figure{
                 maxVal = curMaxVal;
             }
         };
-        console.log("MIN    " + minVal);
-        console.log("MAX    " + maxVal);
 
         // Set the xAxis.min property for each axis to be linked
         // xAxis.min
