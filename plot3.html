@@ -15,18 +15,18 @@
         <!-- ============================================================== -->
         <script type="text/javascript">
             var mydata = [
-                ["date", "cases", "deaths", "recovered"], // Column names row is optional
-                ["2020-03-01", 100, 8, 130],
-                ["2020-03-02", 120, 10, 135],
-                ["2020-03-03", 160, 12, 143],
-                ["2020-03-04", 200, 13, 156],
-                ["2020-03-05", 280, 14, 175],
-                ["2020-03-06", 400, 17, 187],
-                ["2020-03-07", 600, 21, 200],
-                ["2020-03-20", 700, 32, 209],
+                ["date", "date2", "cases", "deaths", "recovered"], // Column names row is optional
+                ["2020-03-01", "2019-12-01", 100, 8, 130],
+                ["2020-03-02", "2019-12-15", 120, 10, 135],
+                ["2020-03-03", "2020-01-01", 160, 12, 143],
+                ["2020-03-04", "2020-01-15", 200, 13, 156],
+                ["2020-03-05", "2020-02-01", 280, 14, 175],
+                ["2020-03-06", "2020-02-15", 400, 17, 187],
+                ["2020-03-07", "2020-03-01", 600, 21, 200],
+                ["2020-03-20", "2020-03-15", 700, 32, 209],
             ];
 
-            var myschema = {date: "time", cases: "continuous", deaths: "continuous", recovered: "continuous"};
+            var myschema = {date: "time", date2: "time", cases: "continuous", deaths: "continuous", recovered: "continuous"};
             var mydf = new DF(mydata, myschema);
         </script>
 
@@ -53,13 +53,14 @@
 
             lineplot({df: mydf, x: "date", y: "cases", ax: fig.axes[0]});
             lineplot({df: mydf, x: "date", y: "deaths", ax: fig.axes[2]});
-            lineplot({df: mydf, x: "date", y: "recovered", ax: fig.axes[4]});
+            lineplot({df: mydf, x: "date2", y: "recovered", ax: fig.axes[4]});
 
             lineplot({df: mydf, x: "cases", y: "deaths", ax: ax1});
             lineplot({df: mydf, x: "cases", y: "recovered", ax: ax1b});
 
             lineplot({df: mydf, x: "deaths", y: "cases", ax: fig.axes[3]});
             lineplot({df: mydf, x: "deaths", y: "recovered", ax: fig.axes[5]});
+
 
 
             // console.log(p2);
