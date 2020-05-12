@@ -15,15 +15,15 @@
         <!-- ============================================================== -->
         <script type="text/javascript">
             var mydata = [
-                ["date", "date2", "cases", "deaths", "recovered"], // Column names row is optional
-                ["2020-03-01", "2019-12-01", 100, 8, 130],
-                ["2020-03-02", "2019-12-15", 120, 10, 135],
-                ["2020-03-03", "2020-01-01", 160, 12, 143],
-                ["2020-03-04", "2020-01-15", 200, 13, 156],
-                ["2020-03-05", "2020-02-01", 280, 14, 175],
-                ["2020-03-06", "2020-02-15", 400, 17, 187],
-                ["2020-03-07", "2020-03-01", 600, 21, 200],
-                ["2020-03-20", "2020-03-15", 700, 32, 209],
+                ["date", "date2", "cases", "deaths", "recovered", "age"], // Column names row is optional
+                ["2020-03-01", "2019-12-01", 100,  8, 130, 24],
+                ["2020-03-02", "2019-12-15", 120, 10, 135, 34],
+                ["2020-03-03", "2020-01-01", 160, 12, 143, 39],
+                ["2020-03-04", "2020-01-15", 200, 13, 156, 47],
+                ["2020-03-05", "2020-02-01", 280, 14, 175, 53],
+                ["2020-03-06", "2020-02-15", 400, 17, 187, 63],
+                ["2020-03-07", "2020-03-01", 600, 21, 200, 75],
+                ["2020-03-20", "2020-03-15", 700, 32, 209, 78],
             ];
 
             var myschema = {date: "time", date2: "time", cases: "continuous", deaths: "continuous", recovered: "continuous"};
@@ -39,12 +39,14 @@
 
             var fig = new Figure({grid:[3,2], gridCellGap:[1,5]});
             fig.setData(mydf);
-            fig.setTitle("Example of Synced Axis Pointer AND axes ranges", "cells 0,2,4 are linked along x axis and xrange, and cells 3,4,5 linked along y and yrange");
+            fig.setTitle("Example of Synced Axis Pointer AND axes ranges", "AXIS POINTER SYNC: cells [0,2,4] are linked along x axis, and cells [3,4,5] linked along y.\nRANGE SYNC: cells [1,2] and [3,4,5] synced along y. cells [0,2,4] and [3,5] synced along x.");
 
             var ax1 = fig.axes[1]
             var ax1b = ax1.sharex();
             fig.syncXrange([0,2,4]);
+            fig.syncXrange([3,5]);
             fig.syncYrange([3,4,5]);
+            fig.syncYrange([1,2]);
 
             fig.linkAxisPointers([0,2,4], "x");
             fig.linkAxisPointers([3,4,5], "y");
@@ -54,14 +56,14 @@
             fig.addDataSlider("y", {axes: [0,1,6], ySLiderPositionX: "0%", ySLiderPositionY: "0%"});
 
             lineplot({df: mydf, x: "date", y: "cases", ax: fig.axes[0]});
-            lineplot({df: mydf, x: "date", y: "deaths", ax: fig.axes[2]});
+            lineplot({df: mydf, x: "date", y: "age", ax: fig.axes[2]});
             lineplot({df: mydf, x: "date2", y: "recovered", ax: fig.axes[4]});
 
             lineplot({df: mydf, x: "cases", y: "deaths", ax: ax1});
             lineplot({df: mydf, x: "cases", y: "recovered", ax: ax1b});
 
             lineplot({df: mydf, x: "deaths", y: "cases", ax: fig.axes[3]});
-            lineplot({df: mydf, x: "deaths", y: "recovered", ax: fig.axes[5]});
+            lineplot({df: mydf, x: "age", y: "recovered", ax: fig.axes[5]});
 
             // console.log(p2);
             var mychart = fig.plot("mychart");
