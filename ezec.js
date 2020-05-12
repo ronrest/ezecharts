@@ -439,6 +439,19 @@ class DF{
         }
     }
 
+    min(colname){
+        // Get the min value of a column
+        // TODO: fix this for date types, it returns min as an integer,
+        //  not the date string
+        var x = this.getColumn(colname, {includeHeader:false});
+        var dtype = this.schema[colname];
+
+        if (dtype === "time"){
+            x = x.map(xx => new Date(xx));
+            // return x;
+        };
+        return Math.min(...x);
+    }
     // TODO: slice by column names, column indices, and multiple
     //       columns at once
 
