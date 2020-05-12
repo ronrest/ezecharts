@@ -368,6 +368,7 @@ function lineplot(settings){
      * Args:
      *     settings: (obj) requires the following items:
      *               - df dataframe with the data
+     *               - ax: Axes object to put the plot into.
      *               - x  (str) name of column to use for x axis
      *               - y  (str) name of column to use for y axis
     */
@@ -375,22 +376,19 @@ function lineplot(settings){
     if ((settings == null) || (settings === undefined)){
         throw "lineplots requires settings argument"
     }
-    var df = getOrThrow(settings, "df");
+    // var df = getOrThrow(settings, "df");
     var xCol = getOrThrow(settings, "x");
     var yCol = getOrThrow(settings, "y");
     var ax = getOrThrow(settings, "ax");
 
-
     // Extract attributes
+    var fig = ax.fig;
+    var df = fig.df;
     var xAxis = ax.x;
     var yAxis = ax.y;
     var xAxisIndex = ax.xAxisIndex;
     var yAxisIndex = ax.yAxisIndex;
-    var fig = ax.fig;
     var series = get_or_create(fig.options, "series", []);
-    // TODO: check if this same df is already in dataset, or
-    //       if it is another dataset
-    var dataset = get_or_create(fig.options, "dataset", {source: df.data});
 
     // map DF schema types to xAxis types
     var dfTypeMapper = {categorical: "category", time: "time", continuous: "value", string: "category"}

@@ -47,8 +47,8 @@
 
             var ax = fig.axes[0]
             // var ax2 = ax.sharex();
-            var p1 = lineplot({df: mydf, x: "date", y: "cases", ax: ax});
-            var p2 = lineplot({df: mydf, x: "date", y: "deaths", ax: ax});
+            var p1 = lineplot({x: "date", y: "cases", ax: ax});
+            var p2 = lineplot({x: "date", y: "deaths", ax: ax});
             console.log(p2);
             var mychart = fig.plot("mychart");
 

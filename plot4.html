@@ -55,15 +55,15 @@
             fig.addDataSlider("x", {axes: [1,3,5], xSLiderPositionX: "50%", xSLiderPositionY: "50%"});
             fig.addDataSlider("y", {axes: [0,1,6], ySLiderPositionX: "0%", ySLiderPositionY: "0%"});
 
-            lineplot({df: mydf, x: "date", y: "cases", ax: fig.axes[0]});
-            lineplot({df: mydf, x: "date", y: "age", ax: fig.axes[2]});
-            lineplot({df: mydf, x: "date2", y: "recovered", ax: fig.axes[4]});
+            lineplot({x: "date", y: "cases", ax: fig.axes[0]});
+            lineplot({x: "date", y: "age", ax: fig.axes[2]});
+            lineplot({x: "date2", y: "recovered", ax: fig.axes[4]});
 
-            lineplot({df: mydf, x: "cases", y: "deaths", ax: ax1});
-            lineplot({df: mydf, x: "cases", y: "recovered", ax: ax1b});
+            lineplot({x: "cases", y: "deaths", ax: ax1});
+            lineplot({x: "cases", y: "recovered", ax: ax1b});
 
-            lineplot({df: mydf, x: "deaths", y: "cases", ax: fig.axes[3]});
-            lineplot({df: mydf, x: "age", y: "recovered", ax: fig.axes[5]});
+            lineplot({x: "deaths", y: "cases", ax: fig.axes[3]});
+            lineplot({x: "age", y: "recovered", ax: fig.axes[5]});
 
             // console.log(p2);
             var mychart = fig.plot("mychart");

@@ -39,20 +39,20 @@
 
             var fig = new Figure({grid:[3,2], gridCellGap:[1,5]});
             fig.setData(mydf);
-            fig.setTitle("THis is my title", "and my subtitle");
+            fig.setTitle("Example of grid layout", "and my subtitle");
 
             var ax1 = fig.axes[0]
             var ax2 = fig.axes[1]
             var ax3 = ax1.sharex();
-            lineplot({df: mydf, x: "date", y: "cases", ax: ax1});
-            lineplot({df: mydf, x: "date", y: "deaths", ax: ax2});
-            lineplot({df: mydf, x: "date", y: "recovered", ax: ax3});
+            lineplot({x: "date", y: "cases", ax: ax1});
+            lineplot({x: "date", y: "deaths", ax: ax2});
+            lineplot({x: "date", y: "recovered", ax: ax3});
 
 
-            lineplot({df: mydf, x: "cases", y: "recovered", ax: fig.axes[2]});
-            lineplot({df: mydf, x: "recovered", y: "deaths", ax: fig.axes[3]});
-            lineplot({df: mydf, x: "deaths", y: "cases", ax: fig.axes[4]});
-            lineplot({df: mydf, x: "recovered", y: "cases", ax: fig.axes[5]});
+            lineplot({x: "cases", y: "recovered", ax: fig.axes[2]});
+            lineplot({x: "recovered", y: "deaths", ax: fig.axes[3]});
+            lineplot({x: "deaths", y: "cases", ax: fig.axes[4]});
+            lineplot({x: "recovered", y: "cases", ax: fig.axes[5]});
 
             // console.log(p2);
             var mychart = fig.plot("mychart");
