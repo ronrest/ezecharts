@@ -392,9 +392,20 @@ function genericXYplot(kind, settings){
     xAxis.type = xAxis.type || get(dfTypeMapper, df.schema[xCol], "value");
     yAxis.type = yAxis.type || get(dfTypeMapper, df.schema[yCol], "value");
 
+    if (kind.startsWith("step")){
+        // valid values: step, step_start, step_middle, step_end
+        step = get(settings, "stepType", "end");
+        kind = "line";
+
+    } else {
+        step = false;
+    }
+
     // ADD THE SERIES
     fig.options.series.push({
         type: kind,
+        step: step,
+        clip: true,
         xAxisIndex: xAxisIndex,
         yAxisIndex: yAxisIndex,
         encode: {x: xCol, y: yCol, seriesName: yCol},
@@ -421,6 +432,19 @@ function scatterplot(settings){
      *               - y  (str) name of column to use for y axis
     */
     genericXYplot("scatter", settings)
+};
+
+function stepplot(settings){
+    /* Creates a stepplot
+     * Args:
+     *     settings: (obj) requires the following items:
+     *               - stepType: (str)(default = "end") "start", "end", "middle"
+     *               - ax: Axes object to put the plot into.
+     *               - x  (str) name of column to use for x axis
+     *               - y  (str) name of column to use for y axis
+    */
+    // TODO: check that stepType is a legal value
+    genericXYplot("step", settings)
 };
 
 function barplot(settings){
