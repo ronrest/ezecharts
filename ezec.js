@@ -342,6 +342,10 @@ class Figure{
 
     }
 
+    printOptions(){
+        console.log(JSON.stringify(this.options, null, 4))
+    }
+
     plot(container_id){
         /* Given an id name of an HTML DIV tag element, it renders the plot
            specified by this figure inside of there.
