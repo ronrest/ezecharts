@@ -423,6 +423,15 @@ function scatterplot(settings){
     genericXYplot("scatter", settings)
 };
 
+function barplot(settings){
+    /* Creates a barplot
+     * Args:
+     *     settings: (obj) requires the following items:
+     *               - ax: Axes object to put the plot into.
+     *               - x  (str) name of column to use for x axis
+     *               - y  (str) name of column to use for y axis
+    */
+    genericXYplot("bar", settings)
 };
 
 
