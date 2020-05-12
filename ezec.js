@@ -421,6 +421,24 @@ class DF{
         return this.columns[idx]
     }
 
+    getColumn(colname, settings={}){
+        /* Gets one column frm te dataframe as an array.
+         * Optionally you can include the column name in settings option
+         * `includeHeader`, setting it to true
+         * TODO: make use of the preserveShape setting
+        */
+        var colId = this.colname2idx(colname);
+        var includeHeader = get(settings, "includeHeader", false);
+        var preserveShape = get(settings, "preserveShape", false);
+
+        var output = this.data.map(x => x[colId]);
+        if (includeHeader){
+            return output;
+        } else {
+            return output.slice(1);
+        }
+    }
+
     // TODO: slice by column names, column indices, and multiple
     //       columns at once
 
