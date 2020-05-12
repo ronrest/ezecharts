@@ -15,18 +15,23 @@
         <!-- ============================================================== -->
         <script type="text/javascript">
             var mydata = [
-                ["date", "date2", "cases", "deaths", "recovered", "age", "feat1", "feat2"], // Column names row is optional
-                ["2020-03-01", "2019-12-01", 100,  8, 130, 75, 12, 9],
-                ["2020-03-02", "2019-12-15", 120, 10, 135, 47,  7, 8],
-                ["2020-03-03", "2020-01-01", 160, 12, 143, 78, 13, 7],
-                ["2020-03-04", "2020-01-15", 200, 13, 156, 63,  9, 8],
-                ["2020-03-05", "2020-02-01", 280, 14, 175, 53, 14, 10],
-                ["2020-03-06", "2020-02-15", 400, 17, 187, 32, 11, 11],
-                ["2020-03-07", "2020-03-01", 600, 21, 200, 37, 16, 8],
-                ["2020-03-20", "2020-03-15", 700, 32, 209, 24, 15, 9],
+                ["date", "date2", "cases", "deaths", "recovered", "age", "feat1", "feat2", "cat1"], // Column names row is optional
+                ["2020-03-01", "2019-12-01", 100,  8, 130, 75, 12,  9, 0],
+                ["2020-03-02", "2019-12-15", 120, 10, 135, 47,  7,  8, 1],
+                ["2020-03-03", "2020-01-01", 160, 12, 143, 78, 13,  7, 1],
+                ["2020-03-04", "2020-01-15", 200, 13, 156, 63,  9,  8, 3],
+                ["2020-03-05", "2020-02-01", 280, 14, 175, 53, 14, 10, 1],
+                ["2020-03-06", "2020-02-15", 400, 17, 187, 32, 11, 11, 0],
+                ["2020-03-07", "2020-03-01", 600, 21, 200, 37, 16,  8, 0],
+                ["2020-03-20", "2020-03-15", 700, 32, 209, 24, 15,  9, 3],
             ];
 
-            var myschema = {date: "time", date2: "time", cases: "continuous", deaths: "continuous", recovered: "continuous"};
+            var myschema = {date: "time", date2: "time", cases: "continuous",
+                            deaths: "continuous", recovered: "continuous",
+                            feat1: "continuous", feat2: "continuous",
+                            cat1: "categorical"
+
+                        };
             var mydf = new DF(mydata, myschema);
         </script>
 
@@ -43,11 +48,11 @@
 
             var ax1 = fig.axes[1]
             var ax1b = ax1.sharex();
-            fig.syncXrange([0,2,4]);
+            fig.syncXrange([0,4]);
             fig.syncYrange([3,4]);
-            fig.syncYrange([1,2]);
+            // fig.syncYrange([1,2]);
 
-            fig.linkAxisPointers([0,2,4], "x");
+            fig.linkAxisPointers([0,4], "x");
             fig.linkAxisPointers([3,4,5], "y");
             // fig.linkAxisPointers([0,2,1], "both");
             fig.addDataSlider("x", {axes: [0,2,4]});
@@ -55,7 +60,7 @@
             fig.addDataSlider("y", {axes: [0,1,6], ySLiderPositionX: "0%", ySLiderPositionY: "0%"});
 
             lineplot({x: "date", y: "cases", ax: fig.axes[0]});
-            lineplot({x: "date", y: "age", ax: fig.axes[2]});
+            barplot({x: "cat1", y: "age", ax: fig.axes[2]});
             lineplot({x: "date2", y: "recovered", ax: fig.axes[4]});
 
             barplot({x: "cases", y: "deaths", ax: ax1});
