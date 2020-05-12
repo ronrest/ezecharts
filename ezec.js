@@ -103,7 +103,7 @@ class Figure{
             title: {
                 text: null,
                 subtext: null,
-                left: 'center',
+                left: '0%',
                 align: 'right'
             },
             legend: {
