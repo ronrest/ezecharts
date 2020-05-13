@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.7.0/echarts.min.js" integrity="sha256-eKrx6Ly6b0Rscx/PSm52rJsvK76RJyv18Toswq+OLSs=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://echarts.cdn.apache.org/examples/vendors/echarts-stat/ecStat.min.js?_v_=1588792671233"></script>
+        <script src="ezec.js" charset="utf-8"></script>
+        <title></title>
+    </head>
+    <body>
+        <div id="mychart" style="width:600px; height:400px;"></div>
+
+
+        <!-- ============================================================== -->
+        <!-- DATA -->
+        <!-- ============================================================== -->
+        <script type="text/javascript">
+            var mydata = [
+                ["date", "date2", "cases", "deaths", "recovered", "age", "feat1", "feat2", "cat1"], // Column names row is optional
+                ["2020-03-01", "2019-12-01", 100,  8, 130, 75, 12,  9, 0],
+                ["2020-03-02", "2019-12-15", 120, 10, 135, 47,  7,  8, 1],
+                ["2020-03-03", "2020-01-01", 160, 12, 143, 78, 13,  7, 1],
+                ["2020-03-04", "2020-01-15", 200, 13, 156, 63,  9,  8, 3],
+                ["2020-03-05", "2020-02-01", 280, 14, 175, 53, 14, 10, 1],
+                ["2020-03-06", "2020-02-15", 400, 17, 187, 32, 11, 11, 0],
+                ["2020-03-07", "2020-03-01", 600, 21, 200, 37, 16,  8, 0],
+                ["2020-03-20", "2020-03-15", 700, 32, 209, 24, 15,  9, 3],
+            ];
+
+            var myschema = {date: "time", date2: "time", cases: "continuous",
+                            deaths: "continuous", recovered: "continuous",
+                            feat1: "continuous", feat2: "continuous",
+                            cat1: "categorical"
+
+                        };
+
+            var mydf = new DF(mydata, myschema);
+        </script>
+
+
+        <!-- ============================================================== -->
+        <!-- CREATE PLOT -->
+        <!-- ============================================================== -->
+        <script type="text/javascript">
+            // var fig = new Figure({grid:[1,1], gridCellGap:[1,5]});
+            var fig = new Figure({grid: [2,2]});
+            fig.setData(mydf);
+            fig.setTitle("Example of Histograms");
+
+            histogram({ax: fig.axes[0], x: "feat1", showItemLabel: true});
+            histogram({ax: fig.axes[1], x: "feat2", showItemLabel: true});
+            lineplot({ax: fig.axes[2], x: "date", y: "deaths"});
+            scatterplot({ax: fig.axes[3], x: "feat1", y: "feat2"});
+            fig.plot("mychart");
+        </script>
+    </body>
+</html>
