@@ -172,7 +172,8 @@ class Figure{
                     top: FIG_TOP_MARGIN + irow * (CELL_HEIGHT + yGridCellGap) + '%',
                     left: FIG_LEFT_MARGIN + icol * (CELL_WIDTH + xGridCellGap) + '%',
                     width: CELL_WIDTH + '%',
-                    height: CELL_HEIGHT + '%'
+                    height: CELL_HEIGHT + '%',
+                    containLabel: false,
                 });
                 new Axes(this, {gridIndex:cell_count-1});
             };
@@ -363,7 +364,7 @@ class Figure{
 
 
 // #############################################################################
-// PLOTS
+// GENERIC PLOT FUNCTIONS
 // #############################################################################
 function genericXYplot(kind, settings){
     //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
@@ -403,6 +404,7 @@ function genericXYplot(kind, settings){
 
     // ADD THE SERIES
     fig.options.series.push({
+        label: {show: false, position: "insideTop"},
         type: kind,
         step: step,
         clip: true,
@@ -412,6 +414,134 @@ function genericXYplot(kind, settings){
     });
 }
 
+
+function genericUnivariatePlot(kind, settings){
+    /*
+     * Args:
+     *    kind: (str) "hist"
+     */
+    //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
+    if ((settings == null) || (settings === undefined)){
+        throw "genericUnivariate requires settings argument"
+    }
+
+    // var df = getOrThrow(settings, "df");
+    var xCol = getOrThrow(settings, "x");
+    var ax = getOrThrow(settings, "ax");
+
+    // Extract attributes
+    var fig = ax.fig;
+    var df = fig.df;
+    var xAxis = ax.x;
+    var yAxis = ax.y;
+    var xAxisIndex = ax.xAxisIndex;
+    var yAxisIndex = ax.yAxisIndex;
+    var series = get_or_create(fig.options, "series", []);
+
+    // map DF schema types to xAxis types
+    var dfTypeMapper = {categorical: "category", time: "time", continuous: "value", string: "category"}
+
+    // SET X AND Y TYPE SETTINGS if they dont already exist
+    xAxis.type = xAxis.type || get(dfTypeMapper, df.schema[xCol], "value");
+    // yAxis.type = yAxis.type || get(dfTypeMapper, df.schema[yCol], "value");
+
+    // var kind = "hist";
+    var step = false;
+
+    if (kind === "hist"){
+        kind = "custom";
+        var plotConfig = hist_config(df, xCol, settings=settings);
+        var seriesName = xCol;
+        yAxis.scale = false; // Make y axis start at 0 for histograms
+    } else {
+        throw "only supports kind of hist at the moment"
+
+    }
+
+    // ADD THE SERIES
+    fig.options.series.push({
+        type: kind,
+        label: {show: plotConfig.showItemLabel, position: "insideTop"},
+        renderItem: plotConfig.renderItem,
+        step: step,
+        clip: true,
+        data: plotConfig.data,
+        xAxisIndex: xAxisIndex,
+        yAxisIndex: yAxisIndex,
+        encode: {x: plotConfig.encodeX, y: plotConfig.encodeY, seriesName: seriesName, tooltip: plotConfig.encodeTooltip, label: plotConfig.encodeLabel},
+    });
+}
+
+
+
+function hist_config(df, colname, settings={}){
+    /*
+     * binMethod: (str) one of squareRoot, scott, freedmanDiaconis, sturges
+     * showItemLabel: (bool) show the labels for each of the bars?
+     * TOOD: option to manually set the number of bins
+     *
+    */
+
+    var values = mydf.getColumn(colname, {includeHeader:false});
+
+    // CREATE BINS
+    var binMethod = get(settings, "binMethod", "squareRoot");
+    var showItemLabel = get(settings, "showItemLabel", false);
+    var bins = ecStat.histogram(values, binMethod);
+
+    // FORMAT THE BINS INTO ARRAY OF ARRAYS LIKE [bin_left, bin_right, amount]
+    var interval;
+    var min = Infinity;
+    var max = -Infinity;
+    var histogram_data = echarts.util.map(bins.data, function (item, index) {
+        var x0 = bins.bins[index].x0;
+        var x1 = bins.bins[index].x1;
+        interval = x1 - x0;
+        min = Math.min(min, x0);
+        max = Math.max(max, x1);
+        return [x0, x1, item[1]];
+    });
+
+    // CUSTOM FUNCTION TO RENDER THE HISTOGRAM BARS
+    function histogramRenderBar(params, api) {
+        var yValue = api.value(2);
+        var start = api.coord([api.value(0), yValue]);
+        var size = api.size([api.value(1) - api.value(0), yValue]);
+        var style = api.style();
+
+        return {
+            type: 'rect',
+            shape: {
+                x: start[0] + 1,
+                y: start[1],
+                width: size[0] - 2,
+                height: size[1]
+            },
+            style: style
+        };
+    }
+
+    var config = {
+        renderItem: histogramRenderBar,
+        min: min,
+        max: max,
+        data: histogram_data,
+
+        encodeX: [0,1],
+        encodeY: 2,
+        encodeTooltip: 2,
+        encodeLabel: 2,
+        showItemLabel: showItemLabel,
+
+    };
+    return config;
+}
+
+
+
+// #############################################################################
+// HIGH LEVEL PLOT FUNCTIONS
+// #############################################################################
 function lineplot(settings){
     /* Creates a lineplot
      * Args:
@@ -456,6 +586,21 @@ function barplot(settings){
      *               - y  (str) name of column to use for y axis
     */
     genericXYplot("bar", settings)
+};
+
+function histogram(settings){
+    /* Creates a histogram
+     * Args:
+     *     settings: (obj) requires the following items:
+     *              - ax: Axes object to put the plot into.
+     *              - x  (str) name of column contianing data you want to plot
+     *              - binMethod: (str) one of squareRoot, scott, freedmanDiaconis, sturges
+     *              - showItemLabel: (bool) show the labels for each of the bars?
+     *
+     * TODO: option to manually set the number of bins
+    */
+    get_or_create(settings, "binMethod", "squareRoot");
+    genericUnivariatePlot("hist", settings);
 };
 
 
