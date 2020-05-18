@@ -122,7 +122,7 @@ class Figure{
             },
 
             tooltip: {
-                axisPointer: {type: "cross"},
+                axisPointer: {type: "cross", label:{}},
             },
             toolbox: {
                right: "0%",
