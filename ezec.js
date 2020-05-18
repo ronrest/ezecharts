@@ -419,6 +419,11 @@ function genericUnivariatePlot(kind, settings){
     /*
      * Args:
      *    kind: (str) "hist"
+     *    settings:
+     *      showXticks
+     *      showYticks
+     *      showXticklabels
+     *      showYticklabels
      */
     //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
     if ((settings == null) || (settings === undefined)){
@@ -428,6 +433,11 @@ function genericUnivariatePlot(kind, settings){
     // var df = getOrThrow(settings, "df");
     var xCol = getOrThrow(settings, "x");
     var ax = getOrThrow(settings, "ax");
+
+    var showXticks = get(settings, "showXticks", true);
+    var showYticks = get(settings, "showYticks", true);
+    var showXticklabels = get(settings, "showXticklabels", true);
+    var showYticklabels = get(settings, "showYticklabels", true);
 
     // Extract attributes
     var fig = ax.fig;
@@ -457,6 +467,10 @@ function genericUnivariatePlot(kind, settings){
         throw "only supports kind of hist at the moment"
 
     }
+
+
+    xAxis.axisLabel.show= showXticklabels;
+    yAxis.axisLabel.show= showYticklabels;
 
     // ADD THE SERIES
     fig.options.series.push({
