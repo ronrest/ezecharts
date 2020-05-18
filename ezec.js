@@ -621,6 +621,116 @@ function histogram(settings){
 
 
 
+
+
+
+function scatterMatrix(df, settings={}){
+    /*
+     * Args:
+     *    df: dataframe
+     *    settings: object
+     *      cols: (str) columns to use
+     *      showXticks
+     *      showYticks
+     *      showXticklabels
+     *      symbolSize
+     *
+     *
+    */
+    var colnames = get(settings, "cols", df.columns);
+    var nCols = colnames.length;
+    var fig = new Figure({grid: [nCols, nCols], gridCellGap: [1,1]});
+    fig.setData(df);
+
+    var axes = fig.axes;
+    var showXticks = get(settings, "showXticks", false);
+    var showYticks = get(settings, "showYticks", false);
+    var showXticklabels = get(settings, "showXticklabels", true);
+    var showYticklabels = get(settings, "showYticklabels", true);
+    var symbolSize = get(settings, "symbolSize", 4);
+
+
+    // ------------------------------------------
+    // LOWER TRIANGLE
+    // ------------------------------------------
+    var linkedCellsX = new Array(nCols);
+    linkedCellsX = linkedCellsX.fill(0).map(function(){return []});
+    for (let irow=0; irow<nCols; irow++){
+        var linkedCellsY = [];
+        for (let icol=0; icol<nCols; icol++){
+            var cellIdx = irow*nCols + icol;
+            var cell = fig.axes[cellIdx];
+            linkedCellsX[icol].push(cellIdx)
+            if (icol >= irow){
+                continue;
+            }
+
+            linkedCellsY.push(cellIdx)
+
+            // SET THE TICKS AND AXIS LABELS
+            cell.y.axisLabel.show= (icol === 0) && (showYticklabels);
+            cell.x.axisLabel.show= (irow === nCols-1) && (showXticklabels);
+
+
+            // cell.x.axisPointer.show = false;
+            // cell.x.axisPointer = {show: false};
+            if (icol === 0){
+                cell.y.name = colnames[irow];
+                cell.y.nameLocation = "middle";
+
+            }
+            if (irow === nCols-1){
+                cell.x.axisLabel.inside = false;
+                cell.x.name = colnames[icol];
+                cell.x.nameLocation = "middle";
+            }
+
+            // TODO: SHOW HOVER OF X,Y VALUES ONLY ALONG THE EDGES OF THE FIGURE
+            fig.options.tooltip.axisPointer.label.show = false;
+            // var showTooltipTickHover = false;
+            // var xAxisTooltip = get_or_create(cell.x, "tooltip", {});
+            // var tooltipAxisPointer = get_or_create(xAxisTooltip, "axisPointer", {type: 'cross', label:{show: showTooltipTickHover}});
+            // get_or_create(ax.x.tooltip.axisPointer.label.show, {type: 'cross', label:{show: showTooltipTickHover}});
+
+            // ACTUALLY DO SCATTERPLOT
+            var col1 = colnames[icol];
+            var col2 = colnames[irow];
+            scatterplot({ax: cell, x: col1, y: col2, symbolSize: 5});
+        }
+        fig.linkAxisPointers(linkedCellsY, kind="y");
+    }
+    console.log(linkedCellsX)
+    linkedCellsX.forEach(function(cells){
+        console.log(cells);
+        // fig.syncXrange(cells);  // TODO: sync x Range of diagonal items without clipping final bar in histogram
+        fig.linkAxisPointers(cells, kind="x");
+    })
+    // scatterplot({ax: fig.axes[0], x: "feat1", y: "feat2"});
+
+
+    // ------------------------------------------
+    // DIAGONAL
+    // ------------------------------------------
+    for (let i=0; i<nCols; i++){
+        var col = colnames[i];
+        var cell = fig.axes[i * nCols + i];
+        // var showXticklabels = false;
+        // var showYticklabels = false;
+        histogram({ax: cell, x: col, showItemLabel: false, showXticklabels: false, showYticklabels:false});
+        cell.y.axisLabel.show= (i === 0) && (showYticklabels);
+        cell.x.axisLabel.show= (i === nCols-1) && (showXticklabels);
+    }
+
+
+    // ------------------------------------------
+    // UPPER TRIANGLE
+    // ------------------------------------------
+    // HEATMAP
+
+    return fig;
+}
+
+
 // #############################################################################
 // SUPPORT
 // #############################################################################
