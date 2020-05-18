@@ -405,6 +405,7 @@ function genericXYplot(kind, settings){
     // ADD THE SERIES
     fig.options.series.push({
         label: {show: false, position: "insideTop"},
+        symbolSize: get(settings, "symbolSize", 5),
         type: kind,
         step: step,
         clip: true,
@@ -574,6 +575,7 @@ function scatterplot(settings){
      *               - ax: Axes object to put the plot into.
      *               - x  (str) name of column to use for x axis
      *               - y  (str) name of column to use for y axis
+     *               - symbolSize  (num) suze of the points
     */
     genericXYplot("scatter", settings)
 };
