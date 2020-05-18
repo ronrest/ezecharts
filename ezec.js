@@ -350,7 +350,7 @@ class Figure{
            specified by this figure inside of there.
         */
         var fig = this;
-
+        
         // SYNCING OF AXIS RANGES IF NEEDED
         fig._configureSyncedRanges();
 
@@ -371,15 +371,26 @@ function genericXYplot(kind, settings){
     if ((settings == null) || (settings === undefined)){
         throw "lineplots requires settings argument"
     }
+
     // var df = getOrThrow(settings, "df");
     // var kind = get(settings, "kind");
     var xCol = getOrThrow(settings, "x");
     var yCol = getOrThrow(settings, "y");
     var ax = getOrThrow(settings, "ax");
+    var fig = ax.fig;
+
+
+    // CHECK TO SEE IF A DATAFRAME SPECIFIC PLOT HAS BEEN PASSED
+    // OR IF TO USE THE DEFUALT DATAFRAME IN THE FIGURE
+    var df = fig.df;
+    var overrideDefaultDF = false;
+    if (get(settings, "df", null) !== null){
+        df = settings.df;
+        overrideDefaultDF = true;
+    }
+
 
     // Extract attributes
-    var fig = ax.fig;
-    var df = fig.df;
     var xAxis = ax.x;
     var yAxis = ax.y;
     var xAxisIndex = ax.xAxisIndex;
@@ -403,16 +414,25 @@ function genericXYplot(kind, settings){
     }
 
     // ADD THE SERIES
-    fig.options.series.push({
+    var options = {
         label: {show: false, position: "insideTop"},
         symbolSize: get(settings, "symbolSize", 5),
+        visualMap: [],
         type: kind,
         step: step,
         clip: true,
         xAxisIndex: xAxisIndex,
         yAxisIndex: yAxisIndex,
         encode: {x: xCol, y: yCol, seriesName: yCol},
-    });
+    };
+
+    if (overrideDefaultDF){
+        console.log("overiding figure's default dataframe");
+        options.dimensions = df.columns;
+        options.data = df.data;
+    }
+    fig.options.series.push(options);
+    return options;
 }
 
 
