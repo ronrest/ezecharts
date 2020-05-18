@@ -686,6 +686,10 @@ class DF{
         // this.shape = TODO
     }
 
+    shape(){
+        return [this.data.length, this.data[0].length];
+    }
+
     colname2idx(colname){
         var idx = this.columns.indexOf(colname);
         if (idx == -1){
