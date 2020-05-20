@@ -350,7 +350,7 @@ class Figure{
            specified by this figure inside of there.
         */
         var fig = this;
-        
+
         // SYNCING OF AXIS RANGES IF NEEDED
         fig._configureSyncedRanges();
 
@@ -414,7 +414,7 @@ function genericXYplot(kind, settings){
     }
 
     // ADD THE SERIES
-    var options = {
+    var seriesSettings = {
         label: {show: false, position: "insideTop"},
         symbolSize: get(settings, "symbolSize", 5),
         visualMap: [],
@@ -428,11 +428,11 @@ function genericXYplot(kind, settings){
 
     if (overrideDefaultDF){
         console.log("overiding figure's default dataframe");
-        options.dimensions = df.columns;
-        options.data = df.data;
+        seriesSettings.dimensions = df.columns;
+        seriesSettings.data = df.data;
     }
-    fig.options.series.push(options);
-    return options;
+    fig.options.series.push(seriesSettings);
+    return fig.options;
 }
 
 
