@@ -641,6 +641,89 @@ function histogram(settings){
 
 
 
+function heatmap(settings){
+    /* Creates a heatmap
+     * Args:
+     *     settings: (obj) requires the following items:
+     *              - ax: Axes object to put the plot into.
+     *              -
+     * BUG: includes header column when a df is passed.
+    */
+    var options = genericXYplot("heatmap", settings);
+    options.visualMap = [{min: 0, max: 20, show: false}];
+    return options;
+
+
+    // // data = settings.df.data;
+    //
+    // var data = [
+    //     ["a",0,20],
+    //     ["b",0,10],
+    //     ["c",0,5],
+    //
+    //     ["a",1,0],
+    //     ["b",1,3],
+    //     ["c",1,15],
+    // ];
+    // var xLabels = ["a","b","c"];
+    // var yLabels = [1,2];
+    //
+    // // RELEVANT ECHARS DOCS: https://echarts.apache.org/en/option.html#series-heatmap
+    // option = {
+    //     tooltip: {
+    //         position: 'top'
+    //     },
+    //     animation: false,
+    //     grid: {
+    //         height: '50%',
+    //         top: '10%'
+    //     },
+    //     xAxis: {
+    //         type: 'category',
+    //         data: xLabels,
+    //         splitArea: {
+    //             show: true
+    //         }
+    //     },
+    //     yAxis: {
+    //         type: 'category',
+    //         data: yLabels,
+    //         splitArea: {
+    //             show: true
+    //         }
+    //     },
+    //     visualMap: [{min: 0, max: 20, show: false}]
+    //     // {
+    //         // min: 100,
+    //         // max: 200,
+    //         // calculable: true,
+    //         // orient: 'horizontal',
+    //         // left: 'center',
+    //         // bottom: '15%'
+    //     // },
+    //     ,
+    //     series: [{
+    //         name: '',
+    //         type: 'heatmap',
+    //         data: data,
+    //         label: {
+    //             show: true
+    //         },
+    //         // encode: {x: 0, y: 1},
+    //         // emphasis: {
+    //         //     itemStyle: {
+    //         //         shadowBlur: 10,
+    //         //         shadowColor: 'rgba(0, 0, 0, 0.5)'
+    //         //     }
+    //         // }
+    //     }]
+    // };
+    //
+    // var myChart = echarts.init(document.getElementById('mychart'));
+    // myChart.setOption(option);
+
+};
+
 
 
 
