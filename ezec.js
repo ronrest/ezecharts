@@ -517,7 +517,7 @@ function hist_config(df, colname, settings={}){
      *
     */
 
-    var values = mydf.getColumn(colname, {includeHeader:false});
+    var values = df.getColumn(colname, {includeHeader:false});
 
     // CREATE BINS
     var binMethod = get(settings, "binMethod", "squareRoot");
