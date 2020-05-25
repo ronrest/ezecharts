@@ -519,8 +519,8 @@ function genericUnivariatePlot(kind, settings){
     xAxis.axisLabel.show= showXticklabels;
     yAxis.axisLabel.show= showYticklabels;
 
-    // ADD THE SERIES
-    fig.options.series.push({
+    // SERIES SETTINGS
+    var seriesSettings = {
         type: kind,
         label: {show: plotConfig.showItemLabel, position: "insideTop"},
         renderItem: plotConfig.renderItem,
@@ -530,7 +530,21 @@ function genericUnivariatePlot(kind, settings){
         xAxisIndex: xAxisIndex,
         yAxisIndex: yAxisIndex,
         encode: {x: plotConfig.encodeX, y: plotConfig.encodeY, seriesName: seriesName, tooltip: plotConfig.encodeTooltip, label: plotConfig.encodeLabel},
-    });
+    }
+
+    // Aesthetics Settings
+    if ("color" in settings){
+        console.log(settings);
+        let lineStyle = get_or_create(seriesSettings, "lineStyle", {});
+        let itemStyle = get_or_create(seriesSettings, "itemStyle", {});
+        console.log(seriesSettings);
+        lineStyle.color = settings.color;
+        itemStyle.color = settings.color;
+    }
+
+    // ADD THE SERIES
+    fig.options.series.push(seriesSettings);
+    return fig.options;
 }
 
 
