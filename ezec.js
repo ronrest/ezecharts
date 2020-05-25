@@ -392,6 +392,10 @@ function genericXYplot(kind, settings){
     var ax = getOrThrow(settings, "ax");
     var fig = ax.fig;
 
+    var showXticks = get(settings, "showXticks", true);
+    var showYticks = get(settings, "showYticks", true);
+    var showXticklabels = get(settings, "showXticklabels", true);
+    var showYticklabels = get(settings, "showYticklabels", true);
 
     // CHECK TO SEE IF A DATAFRAME SPECIFIC PLOT HAS BEEN PASSED
     // OR IF TO USE THE DEFUALT DATAFRAME IN THE FIGURE
@@ -426,7 +430,10 @@ function genericXYplot(kind, settings){
         step = false;
     }
 
-    // ADD THE SERIES
+    xAxis.axisLabel.show= showXticklabels;
+    yAxis.axisLabel.show= showYticklabels;
+
+    // SERIES SETTINGS
     var seriesSettings = {
         label: {show: false, position: "insideTop"},
         symbolSize: get(settings, "symbolSize", 5),
@@ -445,7 +452,6 @@ function genericXYplot(kind, settings){
         seriesSettings.dimensions = df.columns;
         seriesSettings.data = df.data;
     }
-    fig.options.series.push(seriesSettings);
 
     // Aesthetics Settings
     if ("color" in settings){
@@ -457,7 +463,8 @@ function genericXYplot(kind, settings){
         itemStyle.color = settings.color;
     }
 
-
+    // ADD THE SERIES
+    fig.options.series.push(seriesSettings);
     return fig.options;
 }
 
