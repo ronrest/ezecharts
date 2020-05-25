@@ -367,6 +367,19 @@ class Figure{
 // GENERIC PLOT FUNCTIONS
 // #############################################################################
 function genericXYplot(kind, settings){
+    /*
+     * Args:
+     *  kind:
+     *  setings:
+     *      - x
+     *      - y
+     *      - ax
+     *      - df
+     *      - color
+     *      - symbolSize
+     *      -
+     *      - stepType: when kind is a stepplot
+    */
     //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
     if ((settings == null) || (settings === undefined)){
         throw "lineplots requires settings argument"
@@ -426,12 +439,25 @@ function genericXYplot(kind, settings){
         encode: {x: xCol, y: yCol, seriesName: yCol},
     };
 
+    // Override default dataframe
     if (overrideDefaultDF){
         console.log("overiding figure's default dataframe");
         seriesSettings.dimensions = df.columns;
         seriesSettings.data = df.data;
     }
     fig.options.series.push(seriesSettings);
+
+    // Aesthetics Settings
+    if ("color" in settings){
+        console.log(settings);
+        let lineStyle = get_or_create(seriesSettings, "lineStyle", {});
+        let itemStyle = get_or_create(seriesSettings, "itemStyle", {});
+        console.log(seriesSettings);
+        lineStyle.color = settings.color;
+        itemStyle.color = settings.color;
+    }
+
+
     return fig.options;
 }
 

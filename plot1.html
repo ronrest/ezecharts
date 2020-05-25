@@ -39,7 +39,7 @@
 
             var fig = new Figure();
             fig.setData(mydf);
-            fig.setTitle("THis is my title", "and my subtitle");
+            fig.setTitle("THis is my title", "First line contains a custom color");
 
             // Add slider for X
             fig.addDataSlider("x");
@@ -47,7 +47,7 @@
 
             var ax = fig.axes[0]
             // var ax2 = ax.sharex();
-            var p1 = lineplot({x: "date", y: "cases", ax: ax});
+            var p1 = lineplot({x: "date", y: "cases", ax: ax, color: "#FF00FF"});
             var p2 = lineplot({x: "date", y: "deaths", ax: ax});
             console.log(p2);
             var mychart = fig.plot("mychart");
