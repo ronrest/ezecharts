@@ -378,6 +378,11 @@ function genericXYplot(kind, settings){
      *      - color
      *      - symbolSize
      *      -
+     *      - showXticks
+     *      - showYticks
+     *      - showXticklabels
+     *      - showYticklabels
+     *      -
      *      - stepType: when kind is a stepplot
     */
     //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
@@ -472,12 +477,20 @@ function genericXYplot(kind, settings){
 function genericUnivariatePlot(kind, settings){
     /*
      * Args:
-     *    kind: (str) "hist"
-     *    settings:
-     *      showXticks
-     *      showYticks
-     *      showXticklabels
-     *      showYticklabels
+     *  kind: (str) "hist"
+     *  setings:
+     *      - x
+     *      - y
+     *      - ax
+     *      - df
+     *      - color
+     *      - symbolSize
+     *      -
+     *      - showXticks
+     *      - showYticks
+     *      - showXticklabels
+     *      - showYticklabels
+     *
      */
     //  CHECK THE REQUIRED SETTINGS ARE INCLUDED
     if ((settings == null) || (settings === undefined)){
