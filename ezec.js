@@ -79,6 +79,16 @@ class Axes{
 class Figure{
     // FIgure object to store settings for figure similar to matplotlib
     constructor(settings={}) {
+        /*
+         * Args:
+         *   settings:
+         *      - title
+         *      - subtitle
+         *      - grid: (list of 2 integers)  [nRows, nCols] (default=[1,1])
+         *      - figMargins
+         *      - gridCellGap
+         *
+        */
         // GRID SETTINGS
         var gridDims = get(settings, "grid", [1,1]);
         var nrows = gridDims[0];
@@ -158,6 +168,8 @@ class Figure{
             series: [],
         };
 
+        // TITLE
+        this.setTitle(get(settings, "title"), get(settings, "subtitle"));
 
         var tooltip = get_or_create(this.options, "tooltip", {});
         get_or_create(tooltip, "trigger", 'item');
@@ -184,7 +196,6 @@ class Figure{
     setTitle(title, subtitle=null){
         this.options.title.text = title;
         this.options.title.subtext = subtitle;
-
     }
 
     setData(df){
@@ -460,10 +471,8 @@ function genericXYplot(kind, settings){
 
     // Aesthetics Settings
     if ("color" in settings){
-        console.log(settings);
         let lineStyle = get_or_create(seriesSettings, "lineStyle", {});
         let itemStyle = get_or_create(seriesSettings, "itemStyle", {});
-        console.log(seriesSettings);
         lineStyle.color = settings.color;
         itemStyle.color = settings.color;
     }

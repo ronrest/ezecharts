@@ -37,9 +37,9 @@
         <!-- ============================================================== -->
         <script type="text/javascript">
 
-            var fig = new Figure();
+            var fig = new Figure({title: "THis is my title", subtitle: "First line contains a custom color"});
             fig.setData(mydf);
-            fig.setTitle("THis is my title", "First line contains a custom color");
+            // fig.setTitle("THis is my title", "First line contains a custom color");
 
             // Add slider for X
             fig.addDataSlider("x");
@@ -49,7 +49,6 @@
             // var ax2 = ax.sharex();
             var p1 = lineplot({x: "date", y: "cases", ax: ax, color: "#FF00FF"});
             var p2 = lineplot({x: "date", y: "deaths", ax: ax});
-            console.log(p2);
             var mychart = fig.plot("mychart");
 
 
