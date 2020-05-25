@@ -47,9 +47,9 @@
             fig.setData(mydf);
             fig.setTitle("Example of Histograms");
 
-            histogram({ax: fig.axes[0], x: "feat1", showItemLabel: true});
-            histogram({ax: fig.axes[1], x: "feat2", showItemLabel: true});
-            lineplot({ax: fig.axes[2], x: "date", y: "deaths"});
+            histogram({ax: fig.axes[0], x: "feat1", showItemLabel: true, color:"#FF00FF"});
+            histogram({ax: fig.axes[1], x: "feat2", showItemLabel: true, showXticks: false, showXticklabels: false, showYticks: false, showYticklabels: false});
+            lineplot({ax: fig.axes[2], x: "date", y: "deaths", showXticks: false, showXticklabels: false, showYticks: false, showYticklabels: false});
             scatterplot({ax: fig.axes[3], x: "feat1", y: "feat2"});
             fig.plot("mychart");
         </script>
