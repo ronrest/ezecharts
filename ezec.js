@@ -381,13 +381,16 @@ function genericXYplot(kind, settings){
     /*
      * Args:
      *  kind:
+     *
      *  setings:
      *      - x
      *      - y
      *      - ax
      *      - df
      *      - color
-     *      - symbolSize
+     *      -
+     *      - pointSize
+     *      - showPoints
      *      -
      *      - showXticks
      *      - showYticks
@@ -452,7 +455,8 @@ function genericXYplot(kind, settings){
     // SERIES SETTINGS
     var seriesSettings = {
         label: {show: false, position: "insideTop"},
-        symbolSize: get(settings, "symbolSize", 5),
+        symbolSize: get(settings, "pointSize", 5),
+        showSymbol: get(settings, "showPoints", true),
         visualMap: [],
         type: kind,
         step: step,
@@ -475,6 +479,11 @@ function genericXYplot(kind, settings){
         let itemStyle = get_or_create(seriesSettings, "itemStyle", {});
         lineStyle.color = settings.color;
         itemStyle.color = settings.color;
+    }
+
+    // Force symbol to not be visible if size is 0
+    if (seriesSettings.symbolSize === 0){
+        seriesSettings.showSymbol = false;
     }
 
     // ADD THE SERIES
@@ -653,9 +662,19 @@ function lineplot(settings){
      *               - ax: Axes object to put the plot into.
      *               - x  (str) name of column to use for x axis
      *               - y  (str) name of column to use for y axis
+     *
+     *               optional settings
+     *               - df
+     *               - pointSize
+     *               - showPoints
+     *               - color
     */
+    // make the lineplot scalable by default by not showing the points,
+    // (which slow things down)
+    get_or_create(settings, "pointSize", 0);
     genericXYplot("line", settings)
 };
+
 
 function scatterplot(settings){
     /* Creates a scatterplot
@@ -664,8 +683,9 @@ function scatterplot(settings){
      *               - ax: Axes object to put the plot into.
      *               - x  (str) name of column to use for x axis
      *               - y  (str) name of column to use for y axis
-     *               - symbolSize  (num) suze of the points
+     *               - pointSize  (num) suze of the points
     */
+    get_or_create(settings, "pointSize", 5);
     genericXYplot("scatter", settings)
 };
 
@@ -679,6 +699,10 @@ function stepplot(settings){
      *               - y  (str) name of column to use for y axis
     */
     // TODO: check that stepType is a legal value
+
+    // make the stepplot scalable by default by not showing the points,
+    // (which slow things down)
+    get_or_create(settings, "pointSize", 0);
     genericXYplot("step", settings)
 };
 
