@@ -88,6 +88,8 @@ class Figure{
          *      - figMargins
          *      - gridCellGap
          *
+         *      OPTIONAL SETTINGS
+         *      - df
         */
         // GRID SETTINGS
         var gridDims = get(settings, "grid", [1,1]);
@@ -174,6 +176,7 @@ class Figure{
         var tooltip = get_or_create(this.options, "tooltip", {});
         get_or_create(tooltip, "trigger", 'item');
 
+        // SET AXES
         this.axes = [];
         var cell_count = 0;
         var grid = this.options.grid;
@@ -190,6 +193,15 @@ class Figure{
                 new Axes(this, {gridIndex:cell_count-1});
             };
         };
+
+        // SET DATA
+        if (get(settings, "df") != null){
+            this.setData(settings.df)
+        } else {
+            this.df = null;
+            this.schema = {};
+            // this.options.dataset.source = null;
+        }
 
     }
 
