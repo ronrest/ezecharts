@@ -195,13 +195,15 @@ class Figure{
         };
 
         // SET DATA
+        this.bigDataThreshold = 20000; // the amount of data before which it starts to optimize the settings for speed
         if (get(settings, "df") != null){
             this.setData(settings.df)
         } else {
             this.df = null;
             this.schema = {};
             // this.options.dataset.source = null;
-        }
+        };
+
 
     }
 
@@ -247,38 +249,57 @@ class Figure{
     }
 
     addDataSlider(side="x", settings={}){
-        // By defualt, apply to x axis, and all cells
-        // side:        "x", "y", or "both"
-        // axes:        (array) list of axes indices which the slider will control
-        // showSlider:  (bool) show the slider widget? (default=true)
-        // xSliderPositionX: x position of x slider from left side
-        // xSliderPositionY: y position of x slider from bottom side
-        // ySliderPositionX: x position of y slider from left side
-        // ySliderPositionY: y position of y slider from bottom side
+        /* By defualt, apply to x axis, and all cells
+         * side:        "x", "y", or "both"
+         *
+         * axes:        (array) list of axes indices which the slider will control
+         * showSlider:  (bool) show the slider widget? (default=true)
+         * xSliderPositionX: x position of x slider from left side
+         * xSliderPositionY: y position of x slider from bottom side
+         * ySliderPositionX: x position of y slider from left side
+         * ySliderPositionY: y position of y slider from bottom side
+         *
+         * start: (int 0-100)  at what percentage should the start slider be positioned at
+         * end: (int 0-100)    at what percentage should the end slider be positioned at
+         *
+        */
+
+        var fig = this;
         var axes = get(settings, "axes", [...Array(this.axes.length).keys()]);
         var showSlider = get(settings, "showSlider", true);
         var xSliderPositionY = get(settings, "xSliderPositionY", "0%");
         var xSliderPositionX = get(settings, "xSliderPositionX", null);
         var ySliderPositionX = get(settings, "ysliderPositionX", "0%");
         var ySliderPositionY = get(settings, "ysliderPositionY", null);
+
+        // AUTSELECT THE START AND END
+        if ((fig.df != null) && (fig.df.data.length > fig.bigDataThreshold)) {
+            let range = Math.min(100, (fig.bigDataThreshold/fig.df.data.length) * 100);
+            var start = get(settings, "start", 100-range);
+            var end = get(settings, "end", 100);
+        } else {
+            var start = get(settings, "start", 0);
+            var end = get(settings, "end", 100);
+        };
+
+
         var dataZoom = get_or_create(this.options, "dataZoom", []);
-        var fig = this;
 
         if ((side === "x") || (side === "both")){
             var axisIndices = [];
             axes.forEach(function (item){
                 axisIndices.push(fig.axes[item].xAxisIndex)
             });
-            dataZoom.push({type: 'inside', xAxisIndex: axisIndices})
-            dataZoom.push({type: 'slider', show: showSlider, xAxisIndex: axisIndices, bottom: xSliderPositionY, left: xSliderPositionX})
+            dataZoom.push({type: 'inside', xAxisIndex: axisIndices, start: start, end: end})
+            dataZoom.push({type: 'slider', show: showSlider, xAxisIndex: axisIndices, bottom: xSliderPositionY, left: xSliderPositionX, start: start, end: end})
         };
         if ((side === "y") || (side === "both")){
             var axisIndices = [];
             axes.forEach(function (item){
                 axisIndices.push(fig.axes[item].yAxisIndex)
             });
-            dataZoom.push({type: 'inside', yAxisIndex: axisIndices})
-            dataZoom.push({type: 'slider', show: showSlider, yAxisIndex: axisIndices, bottom: ySliderPositionY, left: ySliderPositionX})
+            dataZoom.push({type: 'inside', yAxisIndex: axisIndices, start: start, end: end})
+            dataZoom.push({type: 'slider', show: showSlider, yAxisIndex: axisIndices, bottom: ySliderPositionY, left: ySliderPositionX, start: start, end: end})
         }
     }
 
@@ -368,14 +389,30 @@ class Figure{
         console.log(JSON.stringify(this.options, null, 4))
     }
 
-    plot(container_id){
+    plot(container_id, settings={}){
         /* Given an id name of an HTML DIV tag element, it renders the plot
            specified by this figure inside of there.
+           settings:
+            - bigDataAutoDetect: (bool) you can set this to false if you dont
+              want the default dataSlider being created when a large dataset is being used as default.
         */
         var fig = this;
 
         // SYNCING OF AXIS RANGES IF NEEDED
         fig._configureSyncedRanges();
+
+        // CHECK IF IT IS VERY BIG DATA
+        // Naively add Add a Data Slider for x Axis,  to ALL axes if we have a lot of data
+        // points in the default dataset
+        let bigDataAutoDetect = get(settings, "bigDataAutoDetect", true);
+        if ((bigDataAutoDetect) && (fig.df != null) && (fig.df.data.length > fig.bigDataThreshold)) {
+            let range = Math.min(100, (fig.bigDataThreshold/fig.df.data.length) * 100);
+            let start = 100-range;
+            let end = 100;
+            let axIndices = [...Array(fig.axes.length).keys()]
+            fig.addDataSlider("x", {axes: axIndices});
+        };
+
 
         // ACTUALLY PLOT
         var chart = echarts.init(document.getElementById(container_id));
