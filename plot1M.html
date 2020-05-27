@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.7.0/echarts.min.js" integrity="sha256-eKrx6Ly6b0Rscx/PSm52rJsvK76RJyv18Toswq+OLSs=" crossorigin="anonymous"></script>
+        <script src="ezec.js" charset="utf-8"></script>
+        <title></title>
+    </head>
+    <body>
+        <div id="mychart" style="width:600px; height:400px;"></div>
+
+
+        <!-- ============================================================== -->
+        <!-- SUPPORT FUNCTIONS -->
+        <!-- ============================================================== -->
+        <script type="text/javascript">
+            function createDummyPriceData(t1, n, maxDiff=1, startPrice=100){
+                /*  Create dummy price data at one minute intervals, starting
+                    from time t1, with n data points.
+
+                Args:
+                    t1:     (str, or Date object) timestamp of the first item
+                            if string, then must be interpretable by Date()
+                            function.
+                    n:      (int) number of data points to use
+                    maxDiff: (float) sets the amount of volatility in the price
+                            controls the max amount of price difference between
+                            subsequent timesteps.
+                    startPrice: (float) the price for first timestep.
+
+                Returns:
+                    Returns an ezecharts DF dataframe object with two columns
+                    - date
+                    - price
+                */
+                let tt = new Date(t1);
+                let curVal = startPrice;
+                let valOffset = 0;
+
+                let yy = [];
+                yy.push(["date", "price"])
+                for (let i=0; i<n; i++){
+                    yy.push([tt, curVal])
+
+                    // PREPARE FOR NEXT ROUND
+                    // Increment time by one minute
+                    tt = new Date((new Date(tt)).setMinutes(tt.getMinutes() + 1));
+                    valOffset = Math.random() * (2*maxDiff) - maxDiff;
+                    curVal = curVal + valOffset;
+                }
+                let schema = {date: "time", price: "continuous"};
+                return new DF(yy, schema);
+            }
+        </script>
+
+        <!-- ============================================================== -->
+        <!-- CREATE PLOT -->
+        <!-- ============================================================== -->
+        <script type="text/javascript">
+            // CREATE DATA
+            let n = 1000000; // number of data points
+            var df = createDummyPriceData("2018-01-01 00:00:00", n=n, maxDiff=1, startPrice=100)
+
+            // CREATE PLOT
+            var fig = new Figure({df:df, title: "1 Million DataPoints", subtitle: "Using datetime x and float y"});
+            lineplot({x: "date", y: "price", ax: fig.axes[0]});
+            var mychart = fig.plot("mychart");
+        </script>
+    </body>
+</html>
