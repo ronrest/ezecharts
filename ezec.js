@@ -264,6 +264,7 @@ class Figure{
          *
         */
 
+
         var fig = this;
         var axes = get(settings, "axes", [...Array(this.axes.length).keys()]);
         var showSlider = get(settings, "showSlider", true);
@@ -285,6 +286,7 @@ class Figure{
 
         var dataZoom = get_or_create(this.options, "dataZoom", []);
 
+        // TODO: maybe by default add   filterMode: 'weakFilter'
         if ((side === "x") || (side === "both")){
             var axisIndices = [];
             axes.forEach(function (item){
@@ -306,6 +308,7 @@ class Figure{
 
     syncXrange(indices){
         /* Create flag to Sync up range of values for Axes indices along x axis */
+        // BUG: does not capture a gantplot's end of bar position.
         this._createSyncRangeFlags("x", indices);
     }
 
@@ -474,7 +477,6 @@ function genericXYplot(kind, settings){
         overrideDefaultDF = true;
     }
 
-
     // Extract attributes
     var xAxis = ax.x;
     var yAxis = ax.y;
@@ -514,6 +516,32 @@ function genericXYplot(kind, settings){
         yAxisIndex: yAxisIndex,
         encode: {x: xCol, y: yCol, seriesName: yCol},
     };
+
+    // OVERRIDE SERIES SETTINGS FOR GANT
+    if (kind === "gant_trade"){
+        seriesSettings.type = "custom";
+        seriesSettings.name= "gant";
+        seriesSettings.renderItem= gant_bar_trade;
+        seriesSettings.encode = {
+                x: ["start","end"],
+                y: ["category"],
+                // tooltip: ["start", "val"],
+                // seriesName: "ganty"
+        };
+
+        // xAxis.type = "value";
+        yAxis.type = "category";
+
+        fig.options.dataZoom.push(
+            {
+                type: 'inside',
+                show: true,
+                xAxisIndex: xAxisIndex,
+                filterMode: 'weakFilter', // prevent item from disapering if part of it is clipped by edges of canvas.
+                // realtime: true,
+            }
+        )
+    }
 
     // Override default dataframe
     if (overrideDefaultDF){
@@ -699,6 +727,94 @@ function hist_config(df, colname, settings={}){
     return config;
 }
 
+
+
+function isempty(x){
+    return ((x == undefined) || Number.isNaN(x) || (x === ""));
+};
+
+function gant_bar_trade(params, api){
+    // params: https://echarts.apache.org/en/option.html#series-custom.renderItem.arguments.params
+    // api: https://echarts.apache.org/en/option.html#series-custom.renderItem.arguments.api
+    var x1, x2, height, y, style, val, color;
+    var categoryIndex = api.value("category");
+    [x1, y] = api.coord([api.value("start"), categoryIndex]);
+    [x2, y] = api.coord([api.value("end"), categoryIndex]);
+    val = api.value("val");
+    color = api.value("color");
+
+    // COLOR
+    if (isempty(color)){
+        if (val < 0){
+            color = '#ff5e5e';
+        } else if (val > 0) {
+            color = '#93ba54';
+        } else {
+            color = '#bfbfbf';
+        }
+    };
+
+    style = api.style({fill: color, stroke: color});
+
+    // val = 0;
+    height = api.size([0,1])[1] * 0.9;
+
+
+    var rectShape = echarts.graphic.clipRectByRect(
+        {
+            x: x1,
+            y: y - height/2,
+            width: x2 - x1,
+            height: height
+        },
+        {
+            x: params.coordSys.x,
+            y: params.coordSys.y,
+            width: params.coordSys.width,
+            height: params.coordSys.height
+        }
+    );
+    return rectShape && {
+        type: 'rect', // rect, 'circle', 'sector', 'polygon', ...
+        shape: rectShape,
+        // name: "aaa",
+        // `api.style(...)` is used to obtain style settings, which
+        // includes itemStyle settings in optino and the result of
+        // visual mapping.
+        // style: api.style()
+        style: style
+    };
+};
+
+
+function gantplot(settings){
+    /* Creates a scatterplot
+    Args:
+        settings: (obj) requires the following items:
+                   - ax: Axes object to put the plot into.
+                   - df: dataframe containing the following columns
+                    - start
+                    - end
+
+                    and optionally
+
+                    - category
+                    - val
+                    - color.
+                    - x  (str) name of column to use for x axis
+                    - y  (str) name of column to use for y axis
+                    - pointSize  (num) suze of the points
+    */
+    df = getOrThrow(settings, "df");
+    let kind = get(settings, "kind", "trade");
+    if (kind === "trade"){
+        kind = "gant_trade"
+    }
+    settings.x = "start";
+    settings.y = "category";
+    genericXYplot("gant_trade", settings);
+
+}
 
 
 // #############################################################################
