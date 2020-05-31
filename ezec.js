@@ -1166,10 +1166,14 @@ function getOrThrow(obj, key){
 
 class DF{
     // Initialized in the constructor func
-    constructor(data, schema) {
+    constructor(data, schema, columns=null) {
         this.data = data;
         this.schema = schema;
-        this.columns = data[0];
+        if (columns == null){
+            this.columns = data[0];
+        } else {
+            this.columns = columns;
+        }
         // this.shape = TODO
     }
 
