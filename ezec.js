@@ -286,13 +286,12 @@ class Figure{
 
         var dataZoom = get_or_create(this.options, "dataZoom", []);
 
-        // TODO: maybe by default add   filterMode: 'weakFilter'
         if ((side === "x") || (side === "both")){
             var axisIndices = [];
             axes.forEach(function (item){
                 axisIndices.push(fig.axes[item].xAxisIndex)
             });
-            dataZoom.push({type: 'inside', xAxisIndex: axisIndices, start: start, end: end})
+            dataZoom.push({type: 'inside', xAxisIndex: axisIndices, start: start, end: end, filterMode: 'weakFilter'})
             dataZoom.push({type: 'slider', show: showSlider, xAxisIndex: axisIndices, bottom: xSliderPositionY, left: xSliderPositionX, start: start, end: end})
         };
         if ((side === "y") || (side === "both")){
@@ -300,7 +299,7 @@ class Figure{
             axes.forEach(function (item){
                 axisIndices.push(fig.axes[item].yAxisIndex)
             });
-            dataZoom.push({type: 'inside', yAxisIndex: axisIndices, start: start, end: end})
+            dataZoom.push({type: 'inside', yAxisIndex: axisIndices, start: start, end: end, filterMode: 'weakFilter'})
             dataZoom.push({type: 'slider', show: showSlider, yAxisIndex: axisIndices, bottom: ySliderPositionY, left: ySliderPositionX, start: start, end: end})
         }
     }
